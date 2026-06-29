@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Create Job{% endblock %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+
+    <h2>Create Job</h2>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button class="btn btn-primary">
+            Post Job
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
