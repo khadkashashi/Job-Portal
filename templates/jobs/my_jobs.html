@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}My Jobs{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">My Jobs</h2>
+
+{% if jobs %}
+
+<div class="list-group">
+
+{% for job in jobs %}
+
+<div class="list-group-item">
+
+    <h5>{{ job.title }}</h5>
+
+    <p>{{ job.location }}</p>
+
+    <small>{{ job.get_employment_type_display }}</small>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+
+No jobs posted yet.
+
+</div>
+
+{% endif %}
+
+{% endblock %}
