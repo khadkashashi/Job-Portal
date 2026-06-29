@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-
+from django.shortcuts import get_object_or_404
+from .models import Company
 from .forms import CompanyForm
 
 
@@ -26,7 +27,7 @@ def create_company(request):
             company.save()
 
             messages.success(request, "Company profile created successfully.")
-            return redirect("dashboard")
+            return redirect("company-profile")
 
     else:
         form = CompanyForm()
@@ -35,4 +36,18 @@ def create_company(request):
         request,
         "companies/create_company.html",
         {"form": form},
+    )
+@login_required
+def company_profile(request):
+
+    if request.user.role != "RECRUITER":
+        messages.error(request, "Access denied.")
+        return redirect("dashboard")
+
+    company = get_object_or_404(Company,owner=request.user)
+
+    return render( request, "companies/company_profile.html",
+        {
+            "company": company
+        }
     )
