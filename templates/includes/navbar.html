@@ -1,10 +1,15 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
+<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
 
-        <a class="navbar-brand" href="/">Job Portal</a>
+    <div class="container-lg">
+
+        <a class="navbar-brand fw-bold text-primary"
+           href="/">
+
+            JobPortal
+
+        </a>
 
         <button class="navbar-toggler"
-                type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#navbar">
 
@@ -12,54 +17,71 @@
 
         </button>
 
-        <div class="collapse navbar-collapse" id="navbar">
+        <div class="collapse navbar-collapse"
+             id="navbar">
 
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto align-items-center">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">
-                        Register
-                    </a>
+                    <a class="nav-link" href="#">Jobs</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        Login
-                    </a>
+                    <a class="nav-link" href="#">Companies</a>
                 </li>
+
+                {% if user.is_authenticated %}
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="{% url 'dashboard' %}">
+
+                            Dashboard
+
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+
+                        <a class="btn btn-primary-custom"
+                           href="{% url 'logout' %}">
+
+                            Logout
+
+                        </a>
+
+                    </li>
+
+                {% else %}
+
+                    <li class="nav-item ms-3">
+
+                        <a class="btn btn-outline-primary"
+                           href="{% url 'login' %}">
+
+                            Login
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item ms-2">
+
+                        <a class="btn btn-primary-custom"
+                           href="{% url 'register' %}">
+
+                            Register
+
+                        </a>
+
+                    </li>
+
+                {% endif %}
 
             </ul>
 
         </div>
 
     </div>
+
 </nav>
-{% if user.is_authenticated %}
-
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'dashboard' %}">
-        Dashboard
-    </a>
-</li>
-
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'logout' %}">
-        Logout
-    </a>
-</li>
-
-{% else %}
-
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'register' %}">
-        Register
-    </a>
-</li>
-
-<li class="nav-item">
-    <a class="nav-link" href="{% url 'login' %}">
-        Login
-    </a>
-</li>
-
-{% endif %}
