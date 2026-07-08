@@ -13,10 +13,7 @@ def create_job(request):
         return redirect("dashboard")
 
     if not hasattr(request.user, "company"):
-        messages.warning(
-            request,
-            "Please create your company first."
-        )
+        messages.warning(request, "Please create your company first.")
         return redirect("create-company")
 
     if request.method == "POST":
@@ -31,10 +28,7 @@ def create_job(request):
 
             job.save()
 
-            messages.success(
-                request,
-                "Job posted successfully!"
-            )
+            messages.success(request, "Job posted successfully!")
 
             return redirect("my-jobs")
 
@@ -49,3 +43,9 @@ def create_job(request):
             "form": form,
         },
     )
+
+
+def my_jobs(request):
+
+    jobs = request.user.company.jobs.all() if hasattr(request.user, "company") else []
+    return render(request, "jobs/my_jobs.html", {"jobs": jobs})
