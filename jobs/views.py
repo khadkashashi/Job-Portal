@@ -8,14 +8,15 @@ from .forms import JobForm
 @login_required
 def create_job(request):
 
-    # Only recruiters can post jobs
     if request.user.role != "RECRUITER":
         messages.error(request, "Only recruiters can create jobs.")
         return redirect("dashboard")
 
-    # Recruiter must have a company
     if not hasattr(request.user, "company"):
-        messages.warning(request, "Please create your company profile first.")
+        messages.warning(
+            request,
+            "Please create your company first."
+        )
         return redirect("create-company")
 
     if request.method == "POST":
@@ -30,7 +31,10 @@ def create_job(request):
 
             job.save()
 
-            messages.success(request, "Job posted successfully.")
+            messages.success(
+                request,
+                "Job posted successfully!"
+            )
 
             return redirect("my-jobs")
 
@@ -42,21 +46,6 @@ def create_job(request):
         request,
         "jobs/create_job.html",
         {
-            "form": form
-        },
-    )
-@login_required
-def my_jobs(request):
-
-    if request.user.role != "RECRUITER":
-        return redirect("dashboard")
-
-    jobs = request.user.company.jobs.all().order_by("-created_at")
-
-    return render(
-        request,
-        "jobs/my_jobs.html",
-        {
-            "jobs": jobs
+            "form": form,
         },
     )
