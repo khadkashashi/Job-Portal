@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render,get_object_or_404
 
 from .forms import JobForm
-
+from .models import Job
 
 @login_required
 def create_job(request):
@@ -49,3 +49,20 @@ def my_jobs(request):
 
     jobs = request.user.company.jobs.all() if hasattr(request.user, "company") else []
     return render(request, "jobs/my_jobs.html", {"jobs": jobs})
+
+
+@login_required
+def job_detail(request, pk):
+
+    job = get_object_or_404(
+        Job,
+        pk=pk,
+    )
+
+    return render(
+        request,
+        "jobs/job_detail.html",
+        {
+            "job": job,
+        },
+    )

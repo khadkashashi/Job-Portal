@@ -37,6 +37,8 @@ def create_company(request):
         "companies/create_company.html",
         {"form": form},
     )
+
+
 @login_required
 def company_profile(request):
 
@@ -44,10 +46,66 @@ def company_profile(request):
         messages.error(request, "Access denied.")
         return redirect("dashboard")
 
-    company = get_object_or_404(Company,owner=request.user)
+    company = get_object_or_404(Company, owner=request.user)
 
-    return render( request, "companies/company_profile.html",
+    return render(request, "companies/company_profile.html", {"company": company})
+
+
+@login_required
+def company_detail(request, pk):
+
+    company = get_object_or_404(
+        Company,
+        pk=pk,
+        owner=request.user,
+    )
+
+    return render(
+        request,
+        "companies/company_detail.html",
         {
-            "company": company
-        }
+            "company": company,
+        },
+    )
+
+
+@login_required
+def edit_company(request, pk):
+
+    company = get_object_or_404(
+        Company,
+        pk=pk,
+        owner=request.user,
+    )
+
+    if request.method == "POST":
+
+        form = CompanyForm(
+            request.POST,
+            request.FILES,
+            instance=company,
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(request, "Company updated successfully.")
+
+            return redirect(
+                "company-detail",
+                pk=company.pk,
+            )
+
+    else:
+
+        form = CompanyForm(instance=company)
+
+    return render(
+        request,
+        "companies/edit_company.html",
+        {
+            "form": form,
+            "company": company,
+        },
     )

@@ -1,0 +1,25 @@
+.custom-card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:25px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.custom-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+.custom-card i{
+
+    font-size:45px;
+
+}

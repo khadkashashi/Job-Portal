@@ -29,12 +29,11 @@ class CompanyForm(forms.ModelForm):
             "phone": forms.TextInput(
                 attrs={"class": "form-control"}
             ),
-            "address": forms.Textarea(
-                attrs={"class": "form-control", "rows": 3}
-            ),
-            "city": forms.TextInput(
-                attrs={"class": "form-control"}
-            ),
+            
+          "location": forms.TextInput(
+              attrs={"class": "form-control"}),
+
+            
             "country": forms.TextInput(
                 attrs={"class": "form-control"}
             ),
@@ -48,3 +47,5 @@ class CompanyForm(forms.ModelForm):
                 attrs={"class": "form-control"}
             ),
         }
+
+

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'jobs',
     'appications',
     'api',
+    'applications',
 
 ]
 AUTH_USER_MODEL = 'accounts.User'

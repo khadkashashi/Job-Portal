@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Company{% endblock %}
+
+{% block content %}
+
+<div class="custom-card">
+
+    <h2>{{ company.company_name }}</h2>
+
+    <hr>
+
+    <p><strong>Email:</strong> {{ company.email }}</p>
+
+    <p><strong>Phone:</strong> {{ company.phone }}</p>
+
+    <p><strong>Website:</strong> {{ company.website }}</p>
+
+    <p><strong>Location:</strong> {{ company.location }}</p>
+
+    <p><strong>Description:</strong></p>
+
+    <p>{{ company.description }}</p>
+
+    <a href="{% url 'edit-company' company.pk %}"
+       class="btn btn-primary-custom">
+
+        Edit Company
+
+    </a>
+
+</div>
+
+{% endblock %}
