@@ -60,3 +60,33 @@
     box-shadow:0 25px 60px rgba(0,0,0,.12);
 
 }
+
+.job-card{
+
+    background:#fff;
+    border-radius:20px;
+    padding:28px;
+    border:1px solid #e9ecef;
+    transition:.3s;
+    height:100%;
+
+}
+
+.job-card:hover{
+
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(0,0,0,.08);
+
+}
+
+.job-card h4{
+
+    font-weight:700;
+
+}
+
+.job-card p{
+
+    line-height:1.7;
+
+}
