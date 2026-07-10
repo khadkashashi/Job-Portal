@@ -66,5 +66,15 @@
     </div>
 
 </div>
+{% if request.user.role == "JOB_SEEKER" %}
+
+<a href="{% url 'apply-job' job.pk %}"
+   class="btn btn-primary-custom">
+
+    Apply Now
+
+</a>
+
+{% endif %}
 
 {% endblock %}

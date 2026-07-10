@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Application Details{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row">
+
+        <!-- Left Side -->
+        <div class="col-lg-8">
+
+            <div class="custom-card mb-4">
+
+                <h2 class="fw-bold mb-4">
+                    Applicant Details
+                </h2>
+
+                <table class="table">
+
+                    <tr>
+                        <th width="30%">Applicant</th>
+                        <td>{{ application.applicant.get_full_name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Username</th>
+                        <td>{{ application.applicant.username }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ application.applicant.email }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Applied On</th>
+                        <td>{{ application.applied_at|date:"F d, Y h:i A" }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>Status</th>
+                        <td>
+
+                            {% if application.status == "PENDING" %}
+                                <span class="badge bg-warning">
+                                    Pending
+                                </span>
+
+                            {% elif application.status == "REVIEWING" %}
+                                <span class="badge bg-info">
+                                    Reviewing
+                                </span>
+
+                            {% elif application.status == "SHORTLISTED" %}
+                                <span class="badge bg-success">
+                                    Shortlisted
+                                </span>
+
+                            {% elif application.status == "REJECTED" %}
+                                <span class="badge bg-danger">
+                                    Rejected
+                                </span>
+
+                            {% elif application.status == "HIRED" %}
+                                <span class="badge bg-primary">
+                                    Hired
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div class="custom-card">
+
+                <h4 class="mb-3">
+                    Cover Letter
+                </h4>
+
+                {% if application.cover_letter %}
+
+                    <p style="white-space: pre-line;">
+
+                        {{ application.cover_letter }}
+
+                    </p>
+
+                {% else %}
+
+                    <p class="text-muted">
+
+                        No cover letter provided.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Right Side -->
+        <div class="col-lg-4">
+
+            <div class="custom-card mb-4">
+
+                <h4 class="mb-3">
+                    Job Information
+                </h4>
+
+                <p>
+                    <strong>Job:</strong><br>
+                    {{ application.job.title }}
+                </p>
+
+                <p>
+                    <strong>Company:</strong><br>
+
+                    {% if application.job.company %}
+                        {{ application.job.company.company_name }}
+                    {% endif %}
+
+                </p>
+
+                <p>
+                    <strong>Location:</strong><br>
+                    {{ application.job.location }}
+                </p>
+
+            </div>
+
+            <div class="custom-card mb-4">
+
+                <h4 class="mb-3">
+                    Resume
+                </h4>
+
+                {% if application.resume %}
+
+                    <a href="{{ application.resume.url }}"
+                       target="_blank"
+                       class="btn btn-primary-custom w-100">
+
+                        <i class="bi bi-file-earmark-pdf"></i>
+
+                        View Resume
+
+                    </a>
+
+                {% else %}
+
+                    <p class="text-muted">
+
+                        Resume not uploaded.
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            <div class="custom-card">
+
+                <h4 class="mb-3">
+                    Recruiter Actions
+                </h4>
+
+                <div class="d-grid gap-2">
+
+                    <button class="btn btn-warning">
+
+                        Mark as Reviewing
+
+                    </button>
+
+                    <button class="btn btn-success">
+
+                        Shortlist
+
+                    </button>
+
+                    <button class="btn btn-danger">
+
+                        Reject
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
