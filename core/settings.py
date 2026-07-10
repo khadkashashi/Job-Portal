@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'accounts',
     'companies',
     'jobs',
-    'appications',
     'api',
     'applications',
 

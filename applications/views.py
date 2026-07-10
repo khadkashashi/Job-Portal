@@ -4,4 +4,4 @@ from django.shortcuts import render
 
 @login_required
 def application_list(request):
-    return render(request, "applications/list.html")
+    return render(request, "applications/list-appication.html")
