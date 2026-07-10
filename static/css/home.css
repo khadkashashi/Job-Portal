@@ -1,0 +1,62 @@
+.hero-section{
+
+    padding:100px 0;
+    background:linear-gradient(135deg,#f5f7ff,#ffffff);
+
+}
+
+.hero-badge{
+
+    display:inline-block;
+    padding:10px 22px;
+    border-radius:50px;
+    background:#EEF2FF;
+    color:#4F46E5;
+    font-weight:600;
+
+}
+
+.hero-title{
+
+    font-size:60px;
+    font-weight:800;
+    line-height:1.2;
+    margin:25px 0;
+
+}
+
+.hero-description{
+
+    color:#6B7280;
+    font-size:18px;
+    line-height:30px;
+    margin-bottom:35px;
+
+}
+
+.hero-search{
+
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+}
+
+.hero-buttons{
+
+    display:flex;
+    gap:15px;
+
+}
+
+
+.hero-image{
+
+    width:100%;
+    max-width:650px;
+    border-radius:25px;
+    object-fit:cover;
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+
+}

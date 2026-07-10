@@ -109,3 +109,10 @@ def edit_company(request, pk):
             "company": company,
         },
     )
+def company_list(request):
+    companies = Company.objects.all().order_by("-created_at")
+    return render( request,"companies/company_list.html",
+        {
+            "companies": companies,
+        },
+    )
