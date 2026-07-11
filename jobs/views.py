@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render,get_object_or_404
 from .forms import JobForm
 from .models import Job
+from django.views.generic import ListView
+
 
 @login_required
 def create_job(request):
@@ -22,7 +24,6 @@ def create_job(request):
             return redirect("my-jobs")
     else:
         form = JobForm()
-
     return render( request, "jobs/create_job.html", { "form": form } )
 
 def my_jobs(request):
@@ -37,3 +38,19 @@ def job_detail(request, pk):
 def job_list(request):
     jobs = Job.objects.filter(is_active=True).order_by("-created_at")
     return render(  request, "jobs/job_list.html", { "jobs": jobs })
+
+
+class PublicJobListView(ListView):
+    model = Job
+    template_name = "jobs/public_job_list.html"
+    context_object_name = "jobs"
+    paginate_by = 10
+    def get_queryset(self):
+        queryset = Job.objects.filter(is_active=True)
+        keyword = self.request.GET.get("keyword")
+        location = self.request.GET.get("location")
+        if keyword:
+            queryset = queryset.filter(title__icontains=keyword)
+        if location:
+            queryset = queryset.filter(location__icontains=location)
+        return queryset.order_by("-created_at")
