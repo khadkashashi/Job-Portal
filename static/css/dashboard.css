@@ -154,3 +154,143 @@ body{
     margin-bottom:25px;
 
 }
+
+/* ===============================
+   Applicant Dashboard
+================================ */
+
+.dashboard-banner{
+
+    background:linear-gradient(135deg,#2563eb,#4f46e5);
+
+    color:white;
+
+    padding:35px;
+
+    border-radius:20px;
+
+    box-shadow:0 12px 30px rgba(37,99,235,.25);
+
+}
+
+.dashboard-banner h2{
+
+    font-weight:700;
+
+}
+
+.dashboard-banner p{
+
+    opacity:.9;
+
+    margin-bottom:0;
+
+}
+
+.dashboard-box{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.06);
+
+}
+
+.dashboard-stat-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    padding:30px;
+
+    transition:.3s;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.05);
+
+}
+
+.dashboard-stat-card:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.dashboard-stat-card h3{
+
+    margin-top:18px;
+
+    font-size:34px;
+
+    font-weight:700;
+
+}
+
+.dashboard-stat-card p{
+
+    color:#6b7280;
+
+}
+
+.stat-icon{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    font-size:28px;
+
+    margin:auto;
+
+}
+
+.recommended-job{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    border-bottom:1px solid #ececec;
+
+    padding:20px 0;
+
+}
+
+.recommended-job:last-child{
+
+    border:none;
+
+}
+
+.match-badge{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    padding:6px 14px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
