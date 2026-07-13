@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render,get_object_or_404
 from .forms import JobForm
 from .models import Job
 from django.views.generic import ListView
-
+from django.db.models import Q
 
 @login_required
 def create_job(request):
@@ -36,8 +36,15 @@ def job_detail(request, pk):
     return render( request, "jobs/job_detail.html" ,{"job": job})
 
 def job_list(request):
-    jobs = Job.objects.filter(is_active=True).order_by("-created_at")
-    return render(  request, "jobs/job_list.html", { "jobs": jobs })
+    jobs = Job.objects.filter( is_active=True).order_by("-created_at")
+    keyword = request.GET.get("keyword")
+    if keyword:
+        jobs = jobs.filter(
+            Q(title__icontains=keyword) |
+            Q(company__company_name__icontains=keyword) |
+            Q(location__icontains=keyword)
+        )
+    return render( request, "jobs/job_list.html",{"jobs": jobs})
 
 
 class PublicJobListView(ListView):

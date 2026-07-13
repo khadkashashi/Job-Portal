@@ -55,7 +55,7 @@ def apply_job(request, job_id):
 @login_required
 def my_applications(request):
     applications = Application.objects.filter( applicant=request.user)
-    return render(request,"applications/my_applications.html",{"applications": applications})
+    return render(request,"applications/my_application.html",{"applications": applications})
 
 @login_required
 def application_list(request):

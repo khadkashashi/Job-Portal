@@ -1,18 +1,118 @@
 {% extends "public_base.html" %}
+{% load static %}
+
+{% block title %}Jobs{% endblock %}
 
 {% block content %}
 
 <div class="container py-5">
 
-    <h2>All Jobs</h2>
+    <div class="row mb-5">
+
+        <div class="col-lg-8">
+            <h2 class="fw-bold">
+                Browse Latest Jobs
+            </h2>
+
+            <p class="text-muted">
+                Discover opportunities from verified companies.
+            </p>
+        </div>
+
+        <div class="col-lg-4">
+
+            <form method="GET">
+
+                <input
+                    type="text"
+                    name="keyword"
+                    value="{{ request.GET.keyword }}"
+                    class="form-control"
+                    placeholder="Search jobs...">
+
+            </form>
+
+        </div>
+
+    </div>
+
 
     {% for job in jobs %}
 
-        <p>{{ job.title }}</p>
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <h4 class="fw-bold">
+
+                        {{ job.title }}
+
+                    </h4>
+
+                    <h6 class="text-primary">
+
+                        {{ job.company.company_name }}
+
+                    </h6>
+
+                    <p class="text-muted mb-2">
+
+                        <i class="bi bi-geo-alt"></i>
+
+                        {{ job.location }}
+
+                    </p>
+
+                    <span class="badge bg-success">
+
+                        {{ job.get_employment_type_display }}
+
+                    </span>
+
+                </div>
+
+                <div class="col-lg-4 text-end">
+
+                    <a href="{% url 'company-detail' job.company.pk %}"
+                       class="btn btn-outline-secondary">
+
+                        Company
+
+                    </a>
+
+                    <a href="{% url 'job-detail' job.pk %}"
+                       class="btn btn-outline-primary">
+
+                        Details
+
+                    </a>
+
+                    <a href="{% url 'apply-job' job.pk %}"
+                       class="btn btn-primary">
+
+                        Apply
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     {% empty %}
 
-        <p>No jobs available.</p>
+    <div class="text-center py-5">
+
+        <h4>No Jobs Available</h4>
+
+    </div>
 
     {% endfor %}
 
