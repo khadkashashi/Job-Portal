@@ -16,6 +16,9 @@ class Application(models.Model):
     cover_letter = models.TextField( blank=True)
     status = models.CharField( max_length=20,choices=Applicationstatus.choices,default=Applicationstatus.PENDING )
     applied_at = models.DateTimeField(auto_now_add=True)
+    first_name = models.CharField(max_length=100, default="")
+    last_name = models.CharField(max_length=100, default="")
+    location = models.CharField(max_length=100, default="")
     class Meta:
         ordering = ["-applied_at"]
         unique_together = ("applicant", "job")
