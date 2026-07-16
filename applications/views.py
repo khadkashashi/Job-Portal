@@ -61,8 +61,22 @@ def my_applications(request):
 def application_list(request):
     if request.user.role != "RECRUITER":
         return redirect("dashboard")
-    applications = Application.objects.filter(job__company__owner=request.user)
-    return render(request,"applications/list-application.html", { "applications": applications})
+    applications = Application.objects.filter( job__company__owner=request.user).select_related( "applicant", "job", "job__company").order_by("-applied_at")
+    pending_applications = applications.filter(status=Applicationstatus.PENDING).count()
+    reviewing_applications = applications.filter(status=Applicationstatus.REVIEWING).count()
+    shortlisted_applications = applications.filter(status=Applicationstatus.SHORTLISTED).count()
+    hired_candidates = applications.filter(status=Applicationstatus.HIRED).count()
+    rejected_candidates = applications.filter(status=Applicationstatus.REJECTED).count()
+    context = {
+        "applications": applications,
+        "pending_applications": pending_applications,
+        "reviewing_applications": reviewing_applications,
+        "shortlisted_applications": shortlisted_applications,
+        "hired_candidates": hired_candidates,
+        "rejected_candidates": rejected_candidates,
+        "total_applications": applications.count(),
+    }
+    return render(request, "applications/list-application.html",context )
 
 
 @login_required

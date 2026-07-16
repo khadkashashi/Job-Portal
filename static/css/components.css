@@ -38,3 +38,51 @@
     background:var(--primary-hover);
 
 }
+.pipeline-box{
+
+    background:#ffffff;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    text-align:center;
+
+    border:1px solid #e5e7eb;
+
+    transition:.3s;
+
+}
+
+.pipeline-box:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+
+}
+
+.pipeline-box h2{
+
+    font-size:36px;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+
+}
+
+.pipeline-box small{
+
+    color:#64748b;
+
+    font-size:15px;
+
+    font-weight:600;
+
+}
+
+.reviewing{background:#fff7ed;}
+.shortlisted{ background:#eff6ff;}
+.hired{ background:#ecfdf5;}
+.rejected{background:#fef2f2;}
