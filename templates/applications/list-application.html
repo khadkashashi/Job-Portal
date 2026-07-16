@@ -97,6 +97,76 @@
     <div class="custom-card">
 
         <div class="table-responsive">
+            <div class="custom-card mb-4">
+
+    <form method="GET">
+
+        <div class="row g-3">
+
+            <div class="col-lg-6">
+
+                <input
+                    type="text"
+                    name="keyword"
+                    value="{{ keyword }}"
+                    class="form-control"
+                    placeholder="Search applicant name">
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <select
+                    name="status"
+                    class="form-select">
+
+                    <option value="">All Status</option>
+
+                    <option value="Pending"
+                        {% if status == "Pending" %}selected{% endif %}>
+                        Pending
+                    </option>
+
+                    <option value="Reviewing"
+                        {% if status == "Reviewing" %}selected{% endif %}>
+                        Reviewing
+                    </option>
+
+                    <option value="Shortlisted"
+                        {% if status == "Shortlisted" %}selected{% endif %}>
+                        Shortlisted
+                    </option>
+
+                    <option value="Hired"
+                        {% if status == "Hired" %}selected{% endif %}>
+                        Hired
+                    </option>
+
+                    <option value="Rejected"
+                        {% if status == "Rejected" %}selected{% endif %}>
+                        Rejected
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-lg-2">
+
+                <button
+                    class="btn btn-primary w-100">
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
 
             <table class="table align-middle">
 

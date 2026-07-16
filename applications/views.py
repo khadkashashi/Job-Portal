@@ -62,24 +62,27 @@ def application_list(request):
     if request.user.role != "RECRUITER":
         return redirect("dashboard")
     applications = Application.objects.filter( job__company__owner=request.user).select_related( "applicant", "job", "job__company").order_by("-applied_at")
-    pending_applications = applications.filter(status=Applicationstatus.PENDING).count()
-    reviewing_applications = applications.filter(status=Applicationstatus.REVIEWING).count()
-    shortlisted_applications = applications.filter(status=Applicationstatus.SHORTLISTED).count()
-    hired_candidates = applications.filter(status=Applicationstatus.HIRED).count()
-    rejected_candidates = applications.filter(status=Applicationstatus.REJECTED).count()
+    keyword = request.GET.get("keyword")
+    if keyword:
+        applications = applications.filter(applicant__username__icontains=keyword)
+    status = request.GET.get("status")
+    if status:
+        applications = applications.filter(status=status)
+    applications = applications.order_by("-applied_at")
     context = {
         "applications": applications,
-        "pending_applications": pending_applications,
-        "reviewing_applications": reviewing_applications,
-        "shortlisted_applications": shortlisted_applications,
-        "hired_candidates": hired_candidates,
-        "rejected_candidates": rejected_candidates,
-        "total_applications": applications.count(),
+        "keyword": keyword,
+        "status": status,
+        "pending_applications": Application.objects.filter(job__company__owner=request.user,status=Applicationstatus.PENDING).count(),
+        "reviewing_applications": Application.objects.filter( job__company__owner=request.user,status=Applicationstatus.REVIEWING).count(),
+        "shortlisted_applications": Application.objects.filter(job__company__owner=request.user,status=Applicationstatus.SHORTLISTED).count(),
+        "hired_candidates": Application.objects.filter(job__company__owner=request.user,status=Applicationstatus.HIRED).count(),
+        "rejected_candidates": Application.objects.filter(job__company__owner=request.user,status=Applicationstatus.REJECTED).count(),
     }
-    return render(request, "applications/list-application.html",context )
+    return render(request,"applications/list-application.html",context)
+        
+        
+    
 
-
-@login_required
-def application_detail(request, pk):
-    application = get_object_or_404(Application,pk=pk)
-    return render( request,"applications/detail-application.html", { "application": application} )
+    
+    
