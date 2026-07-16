@@ -4,17 +4,227 @@
 
 {% block content %}
 
-<div class="container py-5">
+<div class="container py-4">
+
+    <!-- Page Header -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                Application Management
+            </h2>
+
+            <p class="text-muted mb-0">
+                Review and manage all applicants.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Hiring Pipeline -->
+
+    <div class="row g-4 mb-5">
+
+        <div class="col-lg col-md-6">
+
+            <div class="pipeline-box">
+
+                <h2>{{ pending_applications }}</h2>
+
+                <small>Pending</small>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg col-md-6">
+
+            <div class="pipeline-box reviewing">
+
+                <h2>{{ reviewing_applications }}</h2>
+
+                <small>Reviewing</small>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg col-md-6">
+
+            <div class="pipeline-box shortlisted">
+
+                <h2>{{ shortlisted_applications }}</h2>
+
+                <small>Shortlisted</small>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg col-md-6">
+
+            <div class="pipeline-box hired">
+
+                <h2>{{ hired_candidates }}</h2>
+
+                <small>Hired</small>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg col-md-6">
+
+            <div class="pipeline-box rejected">
+
+                <h2>{{ rejected_candidates }}</h2>
+
+                <small>Rejected</small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Applications Table -->
 
     <div class="custom-card">
 
-        <h2>Applications</h2>
+        <div class="table-responsive">
 
-        <hr>
+            <table class="table align-middle">
 
-        <p class="text-muted">
-            No applications have been submitted yet.
-        </p>
+                <thead>
+
+                    <tr>
+
+                        <th>Applicant</th>
+
+                        <th>Job</th>
+
+                        <th>Status</th>
+
+                        <th>Applied</th>
+
+                        <th></th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for application in applications %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+
+                                {{ application.applicant.get_full_name|default:application.applicant.username }}
+
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            {{ application.job.title }}
+
+                        </td>
+
+                        <td>
+
+                            {% if application.status == "Pending" %}
+
+                                <span class="badge bg-warning">
+
+                                    Pending
+
+                                </span>
+
+                            {% elif application.status == "Reviewing" %}
+
+                                <span class="badge bg-primary">
+
+                                    Reviewing
+
+                                </span>
+
+                            {% elif application.status == "Shortlisted" %}
+
+                                <span class="badge bg-info">
+
+                                    Shortlisted
+
+                                </span>
+
+                            {% elif application.status == "Hired" %}
+
+                                <span class="badge bg-success">
+
+                                    Hired
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    Rejected
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {{ application.applied_at|date:"d M Y" }}
+
+                        </td>
+
+                        <td>
+
+                            <a href="{% url 'application-detail' application.pk %}"
+
+                               class="btn btn-sm btn-outline-primary">
+
+                                View
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5" class="text-center py-5">
+
+                            <h5>No applications received yet.</h5>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
 
