@@ -157,12 +157,32 @@
 
             </div>
 
-           <div class="custom-card">
+           <div class="custom-card mb-4">
 
-    <h4 class="mb-3">
-        Recruiter Actions
-    </h4>
+                <h4 class="mb-3">
+                    AI Interview
+                </h4>
 
+                {% if interview.completed %}
+
+                    <p><strong>Score:</strong> {{ interview.score }}/100</p>
+                    <p><strong>Feedback:</strong> {{ interview.feedback }}</p>
+
+                {% else %}
+
+                    <p class="text-muted">
+                        Applicant has not completed the AI interview yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            <div class="custom-card">
+
+                <h4 class="mb-3">
+                    Recruiter Actions
+                </h4>
     <div class="d-grid gap-2">
 
         <form method="POST">

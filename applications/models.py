@@ -27,6 +27,8 @@ class Application(models.Model):
 
 class AIInterview(models.Model):
     application = models.OneToOneField( Application, on_delete=models.CASCADE)
+    questions = models.JSONField(default=list, blank=True)
+    answers = models.JSONField(default=list, blank=True)
     score = models.IntegerField(default=0)
     feedback = models.TextField(blank=True)
     completed = models.BooleanField(default=False)

@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from jobs.models import Job
 from .forms import ApplicationForm
-from .models import Application, Applicationstatus
-
+from .models import AIInterview, Application, Applicationstatus
+from .ai import evaluate_interview_answers,generate_interview_questions
 @login_required
 def applicant_dashboard(request):
     if request.user.role != "APPLICANT":
@@ -83,8 +83,10 @@ def application_list(request):
         
         
 @login_required
+@login_required
 def application_detail(request, pk):
     application = get_object_or_404(Application, pk=pk, job__company__owner=request.user)
+    interview = getattr(application, "aiinterview", None)
     if request.method == "POST":
         new_status = request.POST.get("status")
         valid_statuses = [choice for choice, label in Applicationstatus.choices]
@@ -97,8 +99,49 @@ def application_detail(request, pk):
 
         return redirect("application-detail", pk=application.pk)
 
+    return render(request,"applications/detail-application.html",{ "application": application, "interview": interview})
+
+@login_required
+def start_interview(request, application_id):
+    # only the applicant who owns this application can take its interview
+    application = get_object_or_404(Application, pk=application_id, applicant=request.user)
+
+    # get_or_create so refreshing this page twice doesn't make two interview rows
+    interview, _created = AIInterview.objects.get_or_create(application=application)
+
+    # only ask the AI for questions once - reuse them if the applicant reloads the page
+    if not interview.questions:
+        interview.questions = generate_interview_questions(application.job)
+        interview.save()
+
+    if interview.completed:
+        messages.info(request, "You have already completed this interview.")
+        return redirect("my-applications")
+
     return render(
-        request, "applications/detail-application.html", {"application": application}
+        request,
+        "applications/interview.html",
+        {"application": application, "interview": interview},
     )
-    
-    
+
+
+@login_required
+def submit_interview(request, application_id):
+    application = get_object_or_404(Application, pk=application_id, applicant=request.user)
+    interview = get_object_or_404(AIInterview, application=application)
+    if request.method == "POST":
+        answers = [
+            request.POST.get(f"answer_{i}", "").strip()
+            for i in range(len(interview.questions))
+        ]
+        interview.answers = answers
+        score, feedback = evaluate_interview_answers(application.job, interview.questions, answers)
+        interview.score = score
+        interview.feedback = feedback
+        interview.completed = True
+        interview.save()
+
+        messages.success(request, "Interview submitted! The recruiter will see your AI score.")
+        return redirect("my-applications")
+
+    return redirect("start-interview", application_id=application.id)

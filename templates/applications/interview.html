@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}AI Interview{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="col-lg-8 mx-auto">
+
+        <div class="custom-card">
+
+            <h2 class="mb-2">
+                AI Interview
+            </h2>
+
+            <p class="text-muted mb-4">
+                For <strong>{{ application.job.title }}</strong> — answer each question
+                honestly, the AI will score your answers based on the job description.
+            </p>
+
+            <form method="POST" action="{% url 'submit-interview' application.id %}">
+
+                {% csrf_token %}
+
+                {% for question in interview.questions %}
+
+                    <div class="mb-4">
+
+                        <label class="form-label fw-bold">
+                            {{ forloop.counter }}. {{ question }}
+                        </label>
+
+                        <textarea
+                            name="answer_{{ forloop.counter0 }}"
+                            class="form-control"
+                            rows="3"
+                            required></textarea>
+
+                    </div>
+
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary-custom">
+                    Submit Interview
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
