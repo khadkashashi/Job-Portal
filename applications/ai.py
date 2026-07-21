@@ -1,4 +1,5 @@
 import json
+import re
 
 import requests
 
@@ -6,10 +7,24 @@ OLLAMA_URL = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "gemma2:2b"
 
 
+def _clean_json_reply(raw_reply):
+    """
+    gemma2:2b sometimes wraps its answer in ```json ... ``` fences even
+    when told not to (same issue hit in NutriGPT). This strips any code
+    fence and grabs just the {...} or [...] part, so json.loads() has a
+    real chance of succeeding instead of failing every time.
+    """
+    text = raw_reply.strip()
+    text = re.sub(r"^```(json)?", "", text.strip())
+    text = re.sub(r"```$", "", text.strip())
+    return text.strip()
+
+
 def _ask_ollama(prompt):
     """
     Sends one prompt to your local Ollama server and returns the plain
-    text reply. POST to /api/generate with stream: False, read r.json()["response"].
+    text reply. Same call shape as meal/service.py in NutriGPT -
+    POST to /api/generate with stream: False, read r.json()["response"].
     """
     payload = {
         "model": OLLAMA_MODEL,
@@ -43,7 +58,7 @@ Example: ["Question 1?", "Question 2?", "Question 3?", "Question 4?", "Question 
     raw_reply = _ask_ollama(prompt)
 
     try:
-        questions = json.loads(raw_reply)
+        questions = json.loads(_clean_json_reply(raw_reply))
     except (json.JSONDecodeError, TypeError):
         # if the AI ever replies with something that isn't valid JSON,
         # fall back to generic questions instead of crashing the page
@@ -82,7 +97,7 @@ Do NOT include explanations, markdown, code fences, or any extra text.
     raw_reply = _ask_ollama(prompt)
 
     try:
-        result = json.loads(raw_reply)
+        result = json.loads(_clean_json_reply(raw_reply))
         score = int(result.get("score", 0))
         feedback = result.get("feedback", "")
     except (json.JSONDecodeError, TypeError, ValueError):
