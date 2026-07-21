@@ -82,7 +82,23 @@ def application_list(request):
     return render(request,"applications/list-application.html",context)
         
         
-    
+@login_required
+def application_detail(request, pk):
+    application = get_object_or_404(Application, pk=pk, job__company__owner=request.user)
+    if request.method == "POST":
+        new_status = request.POST.get("status")
+        valid_statuses = [choice for choice, label in Applicationstatus.choices]
+        if new_status in valid_statuses:
+            application.status = new_status
+            application.save()
+            messages.success(request, f"Application marked as {new_status}.")
+        else:
+            messages.error(request, "Invalid status.")
 
+        return redirect("application-detail", pk=application.pk)
+
+    return render(
+        request, "applications/detail-application.html", {"application": application}
+    )
     
     

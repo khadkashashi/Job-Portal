@@ -1,18 +1,10 @@
 {% extends "base.html" %}
-
 {% block title %}Application Details{% endblock %}
-
 {% block content %}
-
 <div class="container py-5">
-
     <div class="row">
-
-        <!-- Left Side -->
         <div class="col-lg-8">
-
             <div class="custom-card mb-4">
-
                 <h2 class="fw-bold mb-4">
                     Applicant Details
                 </h2>
@@ -43,27 +35,27 @@
                         <th>Status</th>
                         <td>
 
-                            {% if application.status == "PENDING" %}
+                            {% if application.status == "Pending " %}
                                 <span class="badge bg-warning">
                                     Pending
                                 </span>
 
-                            {% elif application.status == "REVIEWING" %}
+                            {% elif application.status == "Reviewing " %}
                                 <span class="badge bg-info">
                                     Reviewing
                                 </span>
 
-                            {% elif application.status == "SHORTLISTED" %}
+                            {% elif application.status == "Shortlisted " %}
                                 <span class="badge bg-success">
                                     Shortlisted
                                 </span>
 
-                            {% elif application.status == "REJECTED" %}
+                            {% elif application.status == "Rejected " %}
                                 <span class="badge bg-danger">
                                     Rejected
                                 </span>
 
-                            {% elif application.status == "HIRED" %}
+                            {% elif application.status == "Hired " %}
                                 <span class="badge bg-primary">
                                     Hired
                                 </span>
@@ -105,7 +97,7 @@
 
         </div>
 
-        <!-- Right Side -->
+       
         <div class="col-lg-4">
 
             <div class="custom-card mb-4">
@@ -165,40 +157,47 @@
 
             </div>
 
-            <div class="custom-card">
+           <div class="custom-card">
 
-                <h4 class="mb-3">
-                    Recruiter Actions
-                </h4>
+    <h4 class="mb-3">
+        Recruiter Actions
+    </h4>
 
-                <div class="d-grid gap-2">
+    <div class="d-grid gap-2">
 
-                    <button class="btn btn-warning">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="Reviewing">
+            <button type="submit" class="btn btn-warning w-100">
+                Mark as Reviewing
+            </button>
+        </form>
 
-                        Mark as Reviewing
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="Shortlisted">
+            <button type="submit" class="btn btn-success w-100">
+                Shortlist
+            </button>
+        </form>
 
-                    </button>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="Hired">
+            <button type="submit" class="btn btn-primary w-100">
+                Hire
+            </button>
+        </form>
 
-                    <button class="btn btn-success">
-
-                        Shortlist
-
-                    </button>
-
-                    <button class="btn btn-danger">
-
-                        Reject
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="status" value="Rejected">
+            <button type="submit" class="btn btn-danger w-100">
+                Reject
+            </button>
+        </form>
 
     </div>
 
 </div>
-
 {% endblock %}
