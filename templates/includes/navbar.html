@@ -75,6 +75,8 @@ About
 
 <li class="nav-item">
 
+{% if request.user.role == "RECRUITER" %}
+
 <a class="nav-link"
 href="{% url 'dashboard' %}">
 
@@ -82,23 +84,27 @@ Dashboard
 
 </a>
 
-</li>
-
-<li class="nav-item">
+{% elif request.user.role == "APPLICANT" %}
 
 <a class="nav-link"
-href="{% url 'logout' %}">
+href="{% url 'applicant-dashboard' %}">
 
-Logout
+Dashboard
 
 </a>
 
+{% elif request.user.is_superuser or request.user.role == "ADMIN" %}
+
+<a class="nav-link"href="/admin/">Dashboard</a>
+{% endif %}
 </li>
 
+<li class="nav-item">
+<a class="nav-link"href="{% url 'logout' %}">Logout</a>
+</li>
 {% else %}
 
 <li class="nav-item">
-
 <a class="btn btn-outline-primary me-2"
 href="{% url 'login' %}">
 

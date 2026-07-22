@@ -236,7 +236,36 @@ body{
     color:#6b7280;
 
 }
+.hero-dashboard{
+    background:linear-gradient(135deg, var(--primary), #7C3AED);
+    border-radius:24px;
+    padding:50px;
+    color:#ffffff;
+}
 
+.hero-dashboard .hero-title{
+    color:#ffffff;
+}
+
+.hero-dashboard .hero-text{
+    color:rgba(255,255,255,0.85);
+}
+
+.hero-tag{
+    display:inline-block;
+    background:rgba(255,255,255,0.2);
+    padding:8px 18px;
+    border-radius:30px;
+    font-weight:600;
+    font: size 14px;
+}
+
+.search-card{
+    background:#ffffff;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+}
 .stat-icon{
 
     width:65px;
@@ -503,6 +532,7 @@ a{
     border-radius:var(--radius);
     padding:28px;
     height:100%;
+    margin-bottom:24px;
     box-shadow:var(--shadow);
     transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
@@ -587,7 +617,6 @@ a{
     border:1px solid var(--border);
 }
 
-/* ---------- Features / empty states ---------- */
 
 .feature-card{
     background:#fff;
@@ -632,7 +661,6 @@ a{
     color:#fff;
 }
 
-/* ---------- Responsive ---------- */
 
 @media (max-width:992px){
 

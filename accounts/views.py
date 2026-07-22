@@ -6,6 +6,8 @@ from .forms import UserRegisterForm, UserLoginForm
 from companies.models import Company
 from jobs.models import Job
 from applications.models import Application, Applicationstatus
+from django.utils.http import url_has_allowed_host_and_scheme
+from applications.views import applicant_dashboard
 
 
 @login_required
@@ -39,18 +41,26 @@ def register(request):
 def login_view(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
+    next_url = request.POST.get("next") or request.GET.get("next")
+
     if request.method == "POST":
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)
-            messages.success(request, f"Welcome {user.first_name}!")
-            if user.is_superuser:
-             return redirect("/admin/")
+        login(request, user)
+        messages.success(request, f"Welcome {user.first_name}!")
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+            return redirect(next_url)
+        if user.is_superuser or user.role == "ADMIN":
+            return redirect("/admin/")
+        elif user.role == "RECRUITER":
             return redirect("dashboard")
+        elif user.role == "APPLICANT":
+            return redirect("applicant_dashboard")
+        return redirect("dashboard")
     else:
         form = UserLoginForm()
-    return render(request, "accounts/login.html", {"form": form})
+    return render(request, "accounts/login.html", {"form": form, "next": next_url})
 
 @login_required
 def logout_view(request):

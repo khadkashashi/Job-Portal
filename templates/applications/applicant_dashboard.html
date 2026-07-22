@@ -18,18 +18,7 @@
                 👋 Welcome Back, {{ request.user.first_name }}
             </span>
 
-            <h2 class="hero-title mt-3">
-                Find Your Next
-                <span class="text-primary">
-                    Dream Job
-                </span>
-            </h2>
-
-            <p class="hero-text">
-                Browse thousands of verified jobs from trusted companies.
-                Search, apply, and track your applications from one place.
-            </p>
-
+            
         </div>
 
         <!-- Right Side -->
@@ -69,6 +58,70 @@
     </div>
 
 </section>
+
+    <section class="mb-5">
+
+        <div class="row g-4">
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <i class="bi bi-send-fill stat-icon text-primary"></i>
+
+                    <h2>{{ applied_jobs }}</h2>
+
+                    <p>Applied Jobs</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <i class="bi bi-hourglass-split stat-icon text-info"></i>
+
+                    <h2>{{ reviewing_jobs }}</h2>
+
+                    <p>Reviewing</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <i class="bi bi-person-check-fill stat-icon text-warning"></i>
+
+                    <h2>{{ interview_jobs }}</h2>
+
+                    <p>Shortlisted</p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <i class="bi bi-check-circle-fill stat-icon text-success"></i>
+
+                    <h2>{{ accepted_jobs }}</h2>
+
+                    <p>Hired</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
 
     <section>
 
@@ -176,6 +229,97 @@
 
         </div>
 
+       {% endfor %}
+
+    </section>
+
+    <section class="mt-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h3 class="fw-bold">
+
+                Recent Applications
+
+            </h3>
+
+            <a href="{% url 'my-applications' %}" class="btn btn-outline-primary">
+
+                View All
+
+            </a>
+
+        </div>
+
+        {% for application in recent_applications %}
+
+        <div class="job-card">
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <h5 class="mb-2">
+
+                        {{ application.job.title }}
+
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        <i class="bi bi-building"></i>
+
+                        {{ application.job.company.company_name }}
+
+                        &nbsp;&nbsp;
+
+                        <i class="bi bi-calendar"></i>
+
+                        Applied {{ application.applied_at|date:"M d, Y" }}
+
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+
+                    {% if application.status == "Pending" %}
+                        <span class="badge bg-warning">{{ application.status }}</span>
+                    {% elif application.status == "Reviewing" %}
+                        <span class="badge bg-info">{{ application.status }}</span>
+                    {% elif application.status == "Shortlisted" %}
+                        <span class="badge bg-success">{{ application.status }}</span>
+                    {% elif application.status == "Hired" %}
+                        <span class="badge bg-primary">{{ application.status }}</span>
+                    {% elif application.status == "Rejected" %}
+                        <span class="badge bg-danger">{{ application.status }}</span>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="text-center py-5">
+
+            <i class="bi bi-inbox display-3 text-secondary"></i>
+
+            <h4 class="mt-3">
+
+                No Applications Yet
+
+            </h4>
+
+            <p class="text-muted">
+
+                Jobs you apply for will show up here.
+
+            </p>
+
+        </div>
+
         {% endfor %}
 
     </section>
@@ -183,4 +327,3 @@
 </div>
 
 {% endblock %}
-
