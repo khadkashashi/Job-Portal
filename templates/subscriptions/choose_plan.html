@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Choose a Plan{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h2 class="fw-bold">
+            Choose a Plan for {{ request.user.company.company_name }}
+        </h2>
+
+        <p class="text-muted">
+            Free companies are limited to 10 job vacancies. Upgrade for unlimited posting.
+        </p>
+
+    </div>
+
+    <div class="row g-4 justify-content-center">
+
+        {% for plan in plans %}
+
+        <div class="col-lg-3 col-md-6">
+
+            <div class="custom-card text-center h-100">
+
+                <h4 class="fw-bold mb-3">
+                    {{ plan.name }}
+                </h4>
+
+                <h2 class="mb-3">
+                    NPR {{ plan.price }}
+                </h2>
+
+                <p class="text-muted mb-4">
+                    Unlimited job vacancies
+                </p>
+
+                <a href="{% url 'start-payment' plan.id %}" class="btn btn-primary-custom w-100">
+                    Choose Plan
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

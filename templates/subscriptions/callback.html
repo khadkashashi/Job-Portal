@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Result{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="col-lg-6 mx-auto text-center custom-card">
+
+        {% if payment.status == "Success" %}
+
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 60px;"></i>
+
+            <h3 class="mt-3 mb-2">
+                Payment Successful!
+            </h3>
+
+            <p class="text-muted">
+                Your plan is now active. You can post unlimited jobs.
+            </p>
+
+        {% else %}
+
+            <i class="bi bi-x-circle-fill text-danger" style="font-size: 60px;"></i>
+
+            <h3 class="mt-3 mb-2">
+                Payment Failed
+            </h3>
+
+            <p class="text-muted">
+                Something went wrong. Please try again.
+            </p>
+
+        {% endif %}
+
+        <a href="{% url 'dashboard' %}" class="btn btn-primary-custom mt-3">
+            Go to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
