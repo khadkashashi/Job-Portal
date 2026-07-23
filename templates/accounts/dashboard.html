@@ -7,6 +7,7 @@
 <div class="container py-4">
 
     <!-- Header -->
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
@@ -19,7 +20,45 @@
             </p>
         </div>
 
+        {% if subscription %}
+
+            {% if subscription.plan.name == "Lifetime" %}
+
+                <span class="badge bg-primary px-3 py-2">
+                    <i class="bi bi-infinity"></i> Lifetime Plan
+                </span>
+
+            {% elif subscription.plan.name == "Free" %}
+
+                <a href="{% url 'choose-plan' %}" class="badge bg-secondary px-3 py-2 text-decoration-none">
+                    Free Plan &middot; Upgrade
+                </a>
+
+            {% elif days_remaining is not None %}
+
+                {% if days_remaining <= 7 %}
+
+                    <span class="badge bg-danger px-3 py-2">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        {{ days_remaining }} day{{ days_remaining|pluralize }} left on {{ subscription.plan.name }}
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-success px-3 py-2">
+                        {{ days_remaining }} days left on {{ subscription.plan.name }}
+                    </span>
+
+                {% endif %}
+
+            {% endif %}
+
+        {% endif %}
+
     </div>
+
+
+    <!-- Statistics -->
 
 
     <!-- Statistics -->

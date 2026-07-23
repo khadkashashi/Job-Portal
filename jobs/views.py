@@ -7,6 +7,7 @@ from .models import Job
 from django.views.generic import ListView
 from django.db.models import Q
 
+FREE_JOB_LIMIT = 10
 @login_required
 def create_job(request):
     if request.user.role != "RECRUITER":
@@ -19,20 +20,9 @@ def create_job(request):
     company = request.user.company
     subscription = getattr(company, "subscription", None)
     is_paid_active = subscription and subscription.is_active() and subscription.plan.name != "Free"
-
-    if not is_paid_active:
-        FREE_VACANCY_LIMIT = 10
-        current_total = company.jobs.aggregate(total=Sum("vacancies"))["total"] or 0
-
-        if request.method == "POST":
-            requested = int(request.POST.get("vacancies", 0) or 0)
-            if current_total + requested > FREE_VACANCY_LIMIT:
-                messages.error(
-                    request,
-                    f"Free plan allows {FREE_VACANCY_LIMIT} vacancies total. "
-                    f"You have {current_total} already posted. Upgrade your plan to post more.",
-                )
-                return redirect("choose-plan")
+    if not is_paid_active and company.jobs.count() >= FREE_JOB_LIMIT:
+        messages.error( request, f"Free plan allows {FREE_JOB_LIMIT} job posts. Upgrade your plan to post more.")
+        return redirect("choose-plan")
 
     if request.method == "POST":
         form = JobForm(request.POST)

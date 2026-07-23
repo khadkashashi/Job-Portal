@@ -8,23 +8,7 @@ from jobs.models import Job
 from applications.models import Application, Applicationstatus
 from django.utils.http import url_has_allowed_host_and_scheme
 from applications.views import applicant_dashboard
-
-
-@login_required
-def dashboard(request):
-    company = Company.objects.filter(owner=request.user).first()
-    total_jobs = 0
-    active_jobs = 0
-    if company:
-        total_jobs = Job.objects.filter(company=company).count()
-        active_jobs = Job.objects.filter(company=company,is_active=True).count()
-    context = {
-        "company": company,
-        "total_jobs": total_jobs,
-        "active_jobs": active_jobs,
-    }
-
-    return render(request,"accounts/dashboard.html",context)
+from django.utils import timezone
 
 def register(request):
     if request.method == "POST":
@@ -69,7 +53,18 @@ def logout_view(request):
 
 @login_required
 def dashboard(request):
-    company = Company.objects.filter(owner=request.user ).first()
+    company = Company.objects.filter(owner=request.user).first()
+
+    # a company must have picked a plan (even Free) before using the dashboard
+    if company and not hasattr(company, "subscription"):
+        messages.warning(request, "Please choose a plan to continue.")
+        return redirect("choose-plan")
+
+    subscription = getattr(company, "subscription", None) if company else None
+    days_remaining = None
+    if subscription and subscription.plan.name != "Lifetime" and subscription.end_date:
+        days_remaining = (subscription.end_date - timezone.now().date()).days
+
     jobs = Job.objects.none()
     total_jobs = 0
     active_jobs = 0
@@ -79,14 +74,15 @@ def dashboard(request):
     reviewing_applications = 0
     shortlisted_applications = 0
     hired_candidates = 0
+
     if company:
-        jobs = Job.objects.filter(company=company )
+        jobs = Job.objects.filter(company=company)
         total_jobs = jobs.count()
-        active_jobs = jobs.filter(is_active=True ).count()
+        active_jobs = jobs.filter(is_active=True).count()
         recent_jobs = jobs.order_by("-created_at")[:5]
-        applications = Application.objects.filter( job__company=company)
+        applications = Application.objects.filter(job__company=company)
         total_applications = applications.count()
-        pending_applications = applications.filter( status=Applicationstatus.PENDING).count()
+        pending_applications = applications.filter(status=Applicationstatus.PENDING).count()
         reviewing_applications = applications.filter(status=Applicationstatus.REVIEWING).count()
         shortlisted_applications = applications.filter(status=Applicationstatus.SHORTLISTED).count()
         hired_candidates = applications.filter(status=Applicationstatus.HIRED).count()
@@ -101,5 +97,7 @@ def dashboard(request):
         "reviewing_applications": reviewing_applications,
         "shortlisted_applications": shortlisted_applications,
         "hired_candidates": hired_candidates,
+        "subscription": subscription,
+        "days_remaining": days_remaining,
     }
-    return render(request,"accounts/dashboard.html",context)
+    return render(request, "accounts/dashboard.html", context)
