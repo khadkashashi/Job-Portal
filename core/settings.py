@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'api',
     'applications',
     'landingpage',
+    'subscriptions',
 
 ]
 AUTH_USER_MODEL = 'accounts.User'
