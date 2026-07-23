@@ -44,8 +44,7 @@ Welcome Back
 
 {% csrf_token %}
 
-<input type="hidden" name="next" value="{{ next }}">
-
+<input type="hidden" name="next" value="{{ next|default_if_none:'' }}">
 <div class="mb-3">
 
 <label>Email</label>

@@ -47,17 +47,17 @@ def login_view(request):
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
-        login(request, user)
-        messages.success(request, f"Welcome {user.first_name}!")
-        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
-            return redirect(next_url)
-        if user.is_superuser or user.role == "ADMIN":
-            return redirect("/admin/")
-        elif user.role == "RECRUITER":
+            login(request, user)
+            messages.success(request, f"Welcome {user.first_name}!")
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+                return redirect(next_url)
+            if user.is_superuser or user.role == "ADMIN":
+                return redirect("/admin/")
+            elif user.role == "RECRUITER":
+                return redirect("dashboard")
+            elif user.role == "APPLICANT":
+                return redirect("applicant-dashboard")
             return redirect("dashboard")
-        elif user.role == "APPLICANT":
-            return redirect("applicant_dashboard")
-        return redirect("dashboard")
     else:
         form = UserLoginForm()
     return render(request, "accounts/login.html", {"form": form, "next": next_url})
