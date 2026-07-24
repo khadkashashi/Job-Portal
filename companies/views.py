@@ -4,6 +4,8 @@ from django.shortcuts import redirect, render
 from django.shortcuts import get_object_or_404
 from .models import Company
 from .forms import CompanyForm
+from subscriptions.models import CompanyPlan, CompanySubscription, SubscriptionStatus
+from datetime import date
 
 
 @login_required
@@ -20,8 +22,22 @@ def create_company(request):
             company = form.save(commit=False)
             company.owner = request.user
             company.save()
-            messages.success(request, "Company profile created successfully.")
-            return redirect("company-profile")
+            wants_paid_plan = request.POST.get("wants_paid_plan") == "yes"
+
+            if wants_paid_plan:
+                messages.success(request, "Company created! Now choose your plan.")
+                return redirect("choose-plan")
+
+            free_plan = CompanyPlan.objects.get(name="Free")
+            CompanySubscription.objects.create(
+                company=company,
+                plan=free_plan,
+                status=SubscriptionStatus.ACTIVE,
+                start_date=date.today(),
+                end_date=None,
+            )
+            messages.success(request, "Company created on the Free plan.")
+            return redirect("dashboard")
     else:
         form = CompanyForm()
     return render(request,"companies/create_company.html",{"form": form})
