@@ -30,18 +30,18 @@ Jobs
 
     <form method="GET" class="row g-3 mb-5">
 
-        <div class="col-md-5">
+        <div class="col-md-3">
 
             <input
                 type="text"
                 class="form-control"
                 name="keyword"
-                placeholder="Job title"
+                placeholder="Job title or company"
                 value="{{ request.GET.keyword }}">
 
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-3">
 
             <input
                 type="text"
@@ -49,6 +49,35 @@ Jobs
                 name="location"
                 placeholder="Location"
                 value="{{ request.GET.location }}">
+
+        </div>
+
+        <div class="col-md-2">
+
+            <select name="employment_type" class="form-select">
+
+                <option value="">All Types</option>
+
+                {% for value, label in employment_types %}
+
+                    <option value="{{ value }}" {% if request.GET.employment_type == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div class="col-md-2">
+
+            <input
+                type="number"
+                class="form-control"
+                name="min_salary"
+                placeholder="Min Salary"
+                value="{{ request.GET.min_salary }}">
 
         </div>
 
@@ -84,7 +113,7 @@ Jobs
 
                         <p class="text-muted mb-1">
 
-                            {{ job.company.name }}
+                            {{ job.company.company_name }}
 
                         </p>
 
@@ -114,7 +143,7 @@ Jobs
 
                     <span class="fw-semibold">
 
-                        {{ job.job_type }}
+                        {{ job.get_employment_type_display }}
 
                     </span>
 

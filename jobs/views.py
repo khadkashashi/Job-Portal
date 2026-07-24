@@ -66,8 +66,24 @@ class PublicJobListView(ListView):
         queryset = Job.objects.filter(is_active=True)
         keyword = self.request.GET.get("keyword")
         location = self.request.GET.get("location")
+        employment_type = self.request.GET.get("employment_type")
+        min_salary = self.request.GET.get("min_salary")
+
         if keyword:
             queryset = queryset.filter(title__icontains=keyword)
         if location:
             queryset = queryset.filter(location__icontains=location)
+        if employment_type:
+            queryset = queryset.filter(employment_type=employment_type)
+        if min_salary:
+            queryset = queryset.filter(salary_max__gte=min_salary)
         return queryset.order_by("-created_at")
+#Why salary_max__gte=min_salary and not salary_min__gte: if someone searches "I want at least 50,000," a job posted as "40,000–60,000" genuinely qualifies (the top of its range clears the bar), but filtering on salary_min__gte=50000 would incorrectly exclude it just because the starting offer happens to be lower. Filtering on salary_max catches every job where 50,000 is actually achievable.
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["employment_types"] = Job.EmploymentType.choices
+        return context
+
+
+    #get_context_data() is a built-in method used to pass extra data or variables to your HTML template beyond the main query results.
