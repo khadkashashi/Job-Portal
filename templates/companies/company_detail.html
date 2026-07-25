@@ -11,23 +11,20 @@
     <hr>
 
     <p><strong>Email:</strong> {{ company.email }}</p>
-
     <p><strong>Phone:</strong> {{ company.phone }}</p>
-
     <p><strong>Website:</strong> {{ company.website }}</p>
-
     <p><strong>Location:</strong> {{ company.location }}</p>
-
     <p><strong>Description:</strong></p>
-
     <p>{{ company.description }}</p>
 
+    {% if company.owner == request.user %}
     <a href="{% url 'edit-company' company.pk %}"
        class="btn btn-primary-custom">
 
         Edit Company
 
     </a>
+    {% endif %}
 
 </div>
 
