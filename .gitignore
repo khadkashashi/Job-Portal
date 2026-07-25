@@ -8,5 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Environment variables (secrets - never commit)
+.env
 company_logos
 resumes

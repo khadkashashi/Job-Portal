@@ -1,10 +1,11 @@
 from django.urls import reverse
 import requests
 import json
+import os
 
 def get_payment_url(**kwargs):
     url = "https://dev.khalti.com/api/v2/epayment/initiate/"
-    key = "2a3482ac3a0f459a9c64567546ea166b"
+    key = os.environ.get("KHALTI_SECRET_KEY")
     payload = {
         "return_url": kwargs.get('url'),
         "website_url": "https://msskillup.com",
@@ -26,7 +27,7 @@ def get_payment_url(**kwargs):
 
 def lookup_khalti_api(pidx):
     url = "https://dev.khalti.com/api/v2/epayment/lookup/"
-    key = "2a3482ac3a0f459a9c64567546ea166b"
+    key = os.environ.get("KHALTI_SECRET_KEY")
     payload = {
        "pidx":pidx
     }

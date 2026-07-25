@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from jobs.models import Job
 from .forms import ApplicationForm
 from .models import AIInterview, Application, Applicationstatus
 from .ai import evaluate_interview_answers,generate_interview_questions
+
 @login_required
 def applicant_dashboard(request):
     if request.user.role != "APPLICANT":
@@ -83,7 +85,6 @@ def application_list(request):
         
         
 @login_required
-@login_required
 def application_detail(request, pk):
     application = get_object_or_404(Application, pk=pk, job__company__owner=request.user)
     interview = getattr(application, "aiinterview", None)
@@ -94,6 +95,26 @@ def application_detail(request, pk):
             application.status = new_status
             application.save()
             messages.success(request, f"Application marked as {new_status}.")
+            notify_statuses = [
+                Applicationstatus.REVIEWING,
+                Applicationstatus.SHORTLISTED,
+                Applicationstatus.HIRED,
+                Applicationstatus.REJECTED,
+            ]
+            if new_status in notify_statuses:
+                send_mail(
+                    subject=f"Update on your application for {application.job.title}",
+                    message=(
+                        f"Hi {application.applicant.first_name or application.applicant.username},\n\n"
+                        f"Your application for '{application.job.title}' at "
+                        f"{application.job.company.company_name} has been updated to: {new_status}.\n\n"
+                        f"Log in to your dashboard to see more details.\n\n"
+                        f"- {application.job.company.company_name} via JobPortal AI"
+                    ),
+                    from_email=None, #Django automatically falls back to DEFAULT_FROM_EMAIL from your settings when this is None — one less place to hardcode the sender address.
+                    recipient_list=[application.applicant.email],
+                    fail_silently=False,#if email sending ever breaks (bad SMTP credentials, network issue, whatever), we don't want that to crash the whole status-update action — the recruiter should still be able to shortlist/reject someone even if the notification email fails behind the scenes. It fails quietly instead of throwing a 500 error at the recruiter.
+                )
         else:
             messages.error(request, "Invalid status.")
 
