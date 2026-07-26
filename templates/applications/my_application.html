@@ -6,39 +6,109 @@
 
 <div class="container py-5">
 
-  <h2 class="mb-4">My Applications</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Job</th>
-        <th>Status</th>
-        <th>AI Interview</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for application in applications %}
-      <tr>
-        <td>{{ application.job.title }}</td>
-        <td>{{ application.status }}</td>
-        <td>
-          {% if application.aiinterview.completed %}
-            Score: {{ application.aiinterview.score }}/100
-          {% else %}
-            <a href="{% url 'start-interview' application.id %}" class="btn btn-sm btn-primary-custom">
-              Take AI Interview
-            </a>
-          {% endif %}
-        </td>
-        <td>{{ application.applied_at }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="4" class="text-center">You haven't submitted any applications yet.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <h2 class="mb-4">
+        <i class="bi bi-file-earmark-text text-primary"></i>
+        My Applications
+    </h2>
+
+    <div class="custom-card">
+
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th><i class="bi bi-briefcase"></i> Job</th>
+
+                        <th><i class="bi bi-flag"></i> Status</th>
+
+                        <th><i class="bi bi-robot"></i> AI Interview</th>
+
+                        <th><i class="bi bi-calendar-event"></i> Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for application in applications %}
+
+                    <tr>
+
+                        <td>
+                            <strong>{{ application.job.title }}</strong>
+                        </td>
+
+                        <td>
+
+                            {% if application.status == "Pending" %}
+                                <span class="badge bg-warning">Pending</span>
+                            {% elif application.status == "Reviewing" %}
+                                <span class="badge bg-info">Reviewing</span>
+                            {% elif application.status == "Shortlisted" %}
+                                <span class="badge bg-success">Shortlisted</span>
+                            {% elif application.status == "Hired" %}
+                                <span class="badge bg-primary">Hired</span>
+                            {% elif application.status == "Rejected" %}
+                                <span class="badge bg-danger">Rejected</span>
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {% if application.aiinterview.completed %}
+
+                                <i class="bi bi-check-circle-fill text-success"></i>
+                                Score: {{ application.aiinterview.score }}/100
+
+                            {% else %}
+
+                                <a href="{% url 'start-interview' application.id %}" class="btn btn-sm btn-primary-custom">
+                                    <i class="bi bi-mic-fill"></i> Take AI Interview
+                                </a>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ application.applied_at|date:"d M Y" }}
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="4" class="text-center py-5">
+
+                            <i class="bi bi-inbox display-4 text-secondary"></i>
+
+                            <h5 class="mt-3">No Applications Yet</h5>
+
+                            <p class="text-muted mb-0">
+                                Jobs you apply for will show up here.
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

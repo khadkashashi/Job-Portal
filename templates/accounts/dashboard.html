@@ -5,18 +5,17 @@
 {% block content %}
 
 <div class="container py-4">
-
-    <!-- Header -->
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+   <!-- Header -->
+    <div class="recruiter-hero d-flex justify-content-between align-items-center flex-wrap gap-3">
 
         <div>
             <h2 class="fw-bold mb-1">
                 👋 Welcome back, {{ request.user.first_name }}
             </h2>
 
-            <p class="text-muted mb-0">
+            <p class="mb-0">
                 Recruiter Dashboard
+                {% if company %} &middot; {{ company.company_name }}{% endif %}
             </p>
         </div>
 
@@ -24,30 +23,36 @@
 
             {% if subscription.plan.name == "Lifetime" %}
 
-                <span class="badge bg-primary px-3 py-2">
-                    <i class="bi bi-infinity"></i> Lifetime Plan
-                </span>
+                <div class="glass-badge">
+                    <i class="bi bi-infinity text-primary"></i>
+                    <span class="fw-semibold">Lifetime Plan</span>
+                </div>
 
             {% elif subscription.plan.name == "Free" %}
 
-                <a href="{% url 'choose-plan' %}" class="badge bg-secondary px-3 py-2 text-decoration-none">
-                    Free Plan &middot; Upgrade
+                <a href="{% url 'choose-plan' %}" class="glass-badge text-decoration-none">
+                    <span class="fw-semibold text-dark">Free Plan &middot; Upgrade</span>
                 </a>
 
             {% elif days_remaining is not None %}
 
                 {% if days_remaining <= 7 %}
 
-                    <span class="badge bg-danger px-3 py-2">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        {{ days_remaining }} day{{ days_remaining|pluralize }} left on {{ subscription.plan.name }}
-                    </span>
+                    <div class="glass-badge">
+                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                        <span class="fw-semibold text-dark">
+                            {{ days_remaining }} day{{ days_remaining|pluralize }} left on {{ subscription.plan.name }}
+                        </span>
+                    </div>
 
                 {% else %}
 
-                    <span class="badge bg-success px-3 py-2">
-                        {{ days_remaining }} days left on {{ subscription.plan.name }}
-                    </span>
+                    <div class="glass-badge">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <span class="fw-semibold text-dark">
+                            {{ days_remaining }} days left on {{ subscription.plan.name }}
+                        </span>
+                    </div>
 
                 {% endif %}
 
@@ -59,16 +64,15 @@
 
 
     <!-- Statistics -->
-
-
-    <!-- Statistics -->
     <div class="row g-4">
 
         <div class="col-lg-3 col-md-6">
 
-            <div class="dashboard-card">
+            <div class="glass-stat-card">
 
-                <i class="bi bi-briefcase-fill stat-icon text-primary"></i>
+                <div class="stat-icon-wrap bg-primary bg-opacity-10">
+                    <i class="bi bi-briefcase-fill stat-icon text-primary"></i>
+                </div>
 
                 <h2>{{ total_jobs }}</h2>
 
@@ -80,9 +84,11 @@
 
         <div class="col-lg-3 col-md-6">
 
-            <div class="dashboard-card">
+            <div class="glass-stat-card">
 
-                <i class="bi bi-check-circle-fill stat-icon text-success"></i>
+                <div class="stat-icon-wrap bg-success bg-opacity-10">
+                    <i class="bi bi-check-circle-fill stat-icon text-success"></i>
+                </div>
 
                 <h2>{{ active_jobs }}</h2>
 
@@ -94,11 +100,13 @@
 
         <div class="col-lg-3 col-md-6">
 
-            <div class="dashboard-card">
+            <div class="glass-stat-card">
 
-                <i class="bi bi-building stat-icon text-warning"></i>
+                <div class="stat-icon-wrap bg-warning bg-opacity-10">
+                    <i class="bi bi-building stat-icon text-warning"></i>
+                </div>
 
-                <h5>
+                <h5 class="mb-2">
 
                     {% if company %}
                         {{ company.company_name }}
@@ -110,7 +118,7 @@
 
                 {% if company %}
 
-                    <a href="{% url 'company-detail' company.pk %}" class="btn btn-sm btn-outline-primary mt-2">
+                    <a href="{% url 'company-detail' company.pk %}" class="btn btn-sm btn-outline-primary">
 
                         View
 
@@ -118,7 +126,7 @@
 
                 {% else %}
 
-                    <a href="{% url 'create-company' %}" class="btn btn-sm btn-primary-custom mt-2">
+                    <a href="{% url 'create-company' %}" class="btn btn-sm btn-primary-custom">
 
                         Create
 
@@ -132,9 +140,11 @@
 
         <div class="col-lg-3 col-md-6">
 
-            <div class="dashboard-card">
+            <div class="glass-stat-card">
 
-                <i class="bi bi-people-fill stat-icon text-info"></i>
+                <div class="stat-icon-wrap bg-info bg-opacity-10">
+                    <i class="bi bi-people-fill stat-icon text-info"></i>
+                </div>
 
                 <h2>{{ total_applications }}</h2>
                 <p>Total Applications</p>
@@ -150,7 +160,6 @@
         </div>
 
     </div>
-
 
     <!-- Quick Actions -->
 

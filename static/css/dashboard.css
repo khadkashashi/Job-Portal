@@ -236,6 +236,57 @@ body{
     color:#6b7280;
 
 }
+.recruiter-hero{
+    background:linear-gradient(135deg, #0D9488, #0EA5E9);
+    border-radius:20px;
+    padding:40px;
+    color:#ffffff;
+    margin-bottom:35px;
+    box-shadow:0 20px 50px rgba(13,148,136,0.25);
+}
+
+.recruiter-hero h2{
+    color:#ffffff;
+}
+
+.recruiter-hero p{
+    color:rgba(255,255,255,0.85);
+}
+.glass-stat-card{
+    background:rgba(255,255,255,0.7);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.5);
+    border-radius:18px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(13,148,136,0.08);
+    transition:.3s;
+    height:100%;
+}
+
+.glass-stat-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 18px 40px rgba(13,148,136,0.15);
+}
+
+.glass-stat-card h2{
+    font-weight:700;
+    margin-top:12px;
+    margin-bottom:2px;
+}
+
+.glass-stat-card p{
+    color:#6c757d;
+    margin-bottom:0;
+    font-size:14px;
+}
+.glass-badge{
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(10px);
+    border-radius:14px;
+    padding:15px 20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
 .hero-dashboard{
     background:linear-gradient(135deg, var(--primary), #7C3AED);
     border-radius:24px;
