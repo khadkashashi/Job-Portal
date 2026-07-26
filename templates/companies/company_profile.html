@@ -4,40 +4,65 @@
 
 {% block content %}
 
-<div class="card shadow">
+<div class="custom-card">
 
-    <div class="card-body">
-
-        <h2>{{ company.company_name }}</h2>
-
-        <hr>
+    <div class="d-flex align-items-center mb-3">
 
         {% if company.logo %}
             <img src="{{ company.logo.url }}"
-                 width="120"
-                 class="mb-3">
+                 width="70"
+                 height="70"
+                 class="rounded-circle me-3"
+                 style="object-fit: cover;">
+        {% else %}
+            <i class="bi bi-building text-primary" style="font-size: 40px;"></i>
         {% endif %}
 
-        <p><strong>Description:</strong></p>
-        <p>{{ company.description }}</p>
-
-        <p><strong>Email:</strong> {{ company.email }}</p>
-
-        <p><strong>Phone:</strong> {{ company.phone }}</p>
-
-        <p><strong>Website:</strong> {{ company.website }}</p>
-
-        <p><strong>Location:</strong> {{ company.location }}</p>
-
-        <p><strong>Country:</strong> {{ company.country }}</p>
-
-        <p><strong>Employees:</strong> {{ company.employee_count }}</p>
-
-        <a href="#" class="btn btn-warning">
-            Edit Company
-        </a>
+        <h2 class="mb-0 ms-2">{{ company.company_name }}</h2>
 
     </div>
+
+    <hr>
+
+    <p class="mb-1">
+        <i class="bi bi-file-text text-muted me-2"></i>
+        <strong>Description:</strong>
+    </p>
+    <p>{{ company.description }}</p>
+
+    <p>
+        <i class="bi bi-envelope text-muted me-2"></i>
+        <strong>Email:</strong> {{ company.email }}
+    </p>
+
+    <p>
+        <i class="bi bi-telephone text-muted me-2"></i>
+        <strong>Phone:</strong> {{ company.phone }}
+    </p>
+
+    <p>
+        <i class="bi bi-globe text-muted me-2"></i>
+        <strong>Website:</strong> {{ company.website }}
+    </p>
+
+    <p>
+        <i class="bi bi-geo-alt text-muted me-2"></i>
+        <strong>Location:</strong> {{ company.location }}
+    </p>
+
+    <p>
+        <i class="bi bi-flag text-muted me-2"></i>
+        <strong>Country:</strong> {{ company.country }}
+    </p>
+
+    <p>
+        <i class="bi bi-people text-muted me-2"></i>
+        <strong>Employees:</strong> {{ company.employee_count }}
+    </p>
+
+    <a href="{% url 'edit-company' company.pk %}" class="btn btn-primary-custom">
+        <i class="bi bi-pencil-square"></i> Edit Company
+    </a>
 
 </div>
 

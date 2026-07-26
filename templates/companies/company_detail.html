@@ -6,26 +6,53 @@
 
 <div class="custom-card">
 
-    <h2>{{ company.company_name }}</h2>
+    <div class="d-flex align-items-center mb-3">
+
+        <i class="bi bi-building text-primary" style="font-size: 32px;"></i>
+
+        <h2 class="mb-0 ms-3">{{ company.company_name }}</h2>
+
+    </div>
 
     <hr>
 
-    <p><strong>Email:</strong> {{ company.email }}</p>
-    <p><strong>Phone:</strong> {{ company.phone }}</p>
-    <p><strong>Website:</strong> {{ company.website }}</p>
-    <p><strong>Location:</strong> {{ company.location }}</p>
-    <p><strong>Description:</strong></p>
+    <p>
+        <i class="bi bi-envelope text-muted me-2"></i>
+        <strong>Email:</strong> {{ company.email }}
+    </p>
+
+    <p>
+        <i class="bi bi-telephone text-muted me-2"></i>
+        <strong>Phone:</strong> {{ company.phone }}
+    </p>
+
+    <p>
+        <i class="bi bi-globe text-muted me-2"></i>
+        <strong>Website:</strong> {{ company.website }}
+    </p>
+
+    <p>
+        <i class="bi bi-geo-alt text-muted me-2"></i>
+        <strong>Location:</strong> {{ company.location }}
+    </p>
+
+    <p class="mb-1">
+        <i class="bi bi-file-text text-muted me-2"></i>
+        <strong>Description:</strong>
+    </p>
+
     <p>{{ company.description }}</p>
 
     {% if company.owner == request.user %}
+
     <a href="{% url 'edit-company' company.pk %}"
        class="btn btn-primary-custom">
 
-        Edit Company
+        <i class="bi bi-pencil-square"></i> Edit Company
 
     </a>
+
     {% endif %}
 
 </div>
-
 {% endblock %}
