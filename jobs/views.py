@@ -6,6 +6,7 @@ from .forms import JobForm
 from .models import Job
 from django.views.generic import ListView
 from django.db.models import Q
+from datetime import date
 
 FREE_JOB_LIMIT = 10
 @login_required
@@ -63,7 +64,7 @@ class PublicJobListView(ListView):
     context_object_name = "jobs"
     paginate_by = 10
     def get_queryset(self):
-        queryset = Job.objects.filter(is_active=True)
+        queryset = Job.objects.filter(is_active=True, deadline__gte=date.today())       
         keyword = self.request.GET.get("keyword")
         location = self.request.GET.get("location")
         employment_type = self.request.GET.get("employment_type")
