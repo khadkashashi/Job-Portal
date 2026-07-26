@@ -10,71 +10,82 @@
 
     <div class="custom-card">
 
-        <h2>{{ job.title }}</h2>
+        <div class="d-flex align-items-center mb-3">
+
+            <i class="bi bi-briefcase-fill text-primary" style="font-size: 32px;"></i>
+
+            <h2 class="mb-0 ms-3">{{ job.title }}</h2>
+
+        </div>
 
         <hr>
 
         <p>
+            <i class="bi bi-building text-muted me-2"></i>
             <strong>Company:</strong>
-            {{ job.company.name }}
+            {{ job.company.company_name }}
         </p>
 
         <p>
+            <i class="bi bi-geo-alt text-muted me-2"></i>
             <strong>Location:</strong>
             {{ job.location }}
         </p>
 
         <p>
+            <i class="bi bi-briefcase text-muted me-2"></i>
             <strong>Employment Type:</strong>
             {{ job.get_employment_type_display }}
         </p>
 
         <p>
+            <i class="bi bi-bar-chart text-muted me-2"></i>
             <strong>Experience:</strong>
             {{ job.get_experience_level_display }}
         </p>
 
         <p>
+            <i class="bi bi-cash-stack text-muted me-2"></i>
             <strong>Salary:</strong>
-
-            NPR {{ job.salary_min }} -
-            NPR {{ job.salary_max }}
+            NPR {{ job.salary_min }} - NPR {{ job.salary_max }}
         </p>
 
         <p>
+            <i class="bi bi-people text-muted me-2"></i>
             <strong>Vacancies:</strong>
-
             {{ job.vacancies }}
         </p>
 
         <p>
+            <i class="bi bi-calendar-event text-muted me-2"></i>
             <strong>Deadline:</strong>
-
             {{ job.deadline }}
         </p>
 
         <hr>
 
-        <h4>Description</h4>
+        <h4>
+            <i class="bi bi-file-text text-muted"></i>
+            Description
+        </h4>
 
         <p>
-
             {{ job.description }}
-
         </p>
+
+        {% if request.user.is_authenticated and request.user.role == "APPLICANT" %}
+
+        <a href="{% url 'apply-job' job.pk %}"
+           class="btn btn-primary-custom mt-3">
+
+            <i class="bi bi-send-fill"></i> Apply Now
+
+        </a>
+
+        {% endif %}
 
     </div>
 
 </div>
-{% if request.user.role == "JOB_SEEKER" %}
-
-<a href="{% url 'apply-job' job.pk %}"
-   class="btn btn-primary-custom">
-
-    Apply Now
-
-</a>
-
-{% endif %}
 
 {% endblock %}
