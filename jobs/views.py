@@ -57,6 +57,35 @@ def job_list(request):
         )
     return render( request, "jobs/job_list.html",{"jobs": jobs})
 
+@login_required
+def edit_job(request, pk):
+    job = get_object_or_404(Job,pk=pk,company__owner=request.user)
+    was_expired = job.deadline < date.today()
+    if request.method == "POST":
+        form = JobForm(request.POST,instance=job)
+        if form.is_valid():
+            form.save()
+            if was_expired and job.deadline >= date.today():
+                job.is_active = True
+                job.save()
+                messages.success(request, "Job updated and reactivated - deadline extended.")
+            else:
+                messages.success(request, "Job updated successfully.")
+            return redirect("my-jobs")
+              
+    else:
+        form = JobForm(instance=job)
+    return render(request, "jobs/edit_job.html",{"form": form,"job": job})
+
+@login_required
+def delete_job(request, pk):
+    job = get_object_or_404(Job, pk=pk, company__owner=request.user)
+    if request.method == "POST":
+        job_title = job.title
+        job.delete()
+        messages.success(request, f"'{job_title}' has been deleted.")
+        return redirect("my-jobs")
+    return render(request, "jobs/delete_job_confirm.html", {"job": job})
 
 class PublicJobListView(ListView):
     model = Job

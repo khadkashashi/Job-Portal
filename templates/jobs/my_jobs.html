@@ -50,7 +50,7 @@
 
             </div>
 
-            <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+           <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
 
                 {% if job.is_active %}
                     <span class="badge bg-success me-2">Active</span>
@@ -60,6 +60,14 @@
 
                 <a href="{% url 'job-detail' job.pk %}" class="btn btn-sm btn-outline-primary">
                     <i class="bi bi-eye"></i> View
+                </a>
+
+                <a href="{% url 'edit-job' job.pk %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </a>
+
+                <a href="{% url 'delete-job' job.pk %}" class="btn btn-sm btn-outline-danger">
+                    <i class="bi bi-trash"></i> Delete
                 </a>
 
             </div>

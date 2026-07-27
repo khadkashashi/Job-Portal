@@ -53,57 +53,25 @@ def company_profile(request):
 
 @login_required
 def company_detail(request, pk):
-    company = get_object_or_404(
-        Company,
-        pk=pk,
-    )
+    company = get_object_or_404( Company,pk=pk )
     return render( request,"companies/company_detail.html",{"company": company})
 
 
 @login_required
 def edit_company(request, pk):
-
-    company = get_object_or_404(
-        Company,
-        pk=pk,
-        owner=request.user,
-    )
-
+    company = get_object_or_404(Company,pk=pk,owner=request.user)
     if request.method == "POST":
-
-        form = CompanyForm(
-            request.POST,
-            request.FILES,
-            instance=company,
-        )
-
+        form = CompanyForm(request.POST,request.FILES,instance=company)
         if form.is_valid():
-
             form.save()
-
             messages.success(request, "Company updated successfully.")
-
-            return redirect(
-                "company-detail",
-                pk=company.pk,
-            )
-
+            return redirect( "company-detail", pk=company.pk)
+        
     else:
-
         form = CompanyForm(instance=company)
+    return render(request, "companies/edit_company.html",{"form": form,"company": company  } )
 
-    return render(
-        request,
-        "companies/edit_company.html",
-        {
-            "form": form,
-            "company": company,
-        },
-    )
+
 def company_list(request):
     companies = Company.objects.all().order_by("-created_at")
-    return render( request,"companies/company_list.html",
-        {
-            "companies": companies,
-        },
-    )
+    return render( request,"companies/company_list.html",{"companies": companies,} )

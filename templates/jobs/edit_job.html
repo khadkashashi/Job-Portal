@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Job{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="custom-card">
+
+<h2 class="mb-4">
+
+<i class="bi bi-pencil-square text-primary"></i>
+
+Edit Job - {{ job.title }}
+
+</h2>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Job Title
+</label>
+
+{{ form.title }}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Location
+</label>
+
+{{ form.location }}
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Employment Type
+</label>
+
+{{ form.employment_type }}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Experience Level
+</label>
+
+{{ form.experience_level }}
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Minimum Salary
+</label>
+
+{{ form.salary_min }}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Maximum Salary
+</label>
+
+{{ form.salary_max }}
+
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Vacancies
+</label>
+
+{{ form.vacancies }}
+
+</div>
+
+<div class="col-md-6 mb-3">
+
+<label class="form-label">
+Application Deadline
+</label>
+
+{{ form.deadline }}
+
+</div>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Description
+
+</label>
+
+{{ form.description }}
+
+</div>
+
+<div class="form-check mb-4">
+
+{{ form.is_active }}
+
+<label class="form-check-label">
+
+Active (visible in public job list)
+
+</label>
+
+</div>
+
+{% if form.errors %}
+<div class="alert alert-danger">
+    {{ form.non_field_errors }}
+</div>
+{% endif %}
+
+<button class="btn-primary-custom">
+
+<i class="bi bi-check-circle"></i>
+
+Save Changes
+
+</button>
+
+<a href="{% url 'my-jobs' %}" class="btn btn-outline-secondary ms-2">
+    Cancel
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
