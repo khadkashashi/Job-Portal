@@ -8,12 +8,6 @@ OLLAMA_MODEL = "gemma2:2b"
 
 
 def _clean_json_reply(raw_reply):
-    """
-    gemma2:2b sometimes wraps its answer in ```json ... ``` fences even
-    when told not to (same issue hit in NutriGPT). This strips any code
-    fence and grabs just the {...} or [...] part, so json.loads() has a
-    real chance of succeeding instead of failing every time.
-    """
     text = raw_reply.strip()
     text = re.sub(r"^```(json)?", "", text.strip())
     text = re.sub(r"```$", "", text.strip())
@@ -21,11 +15,6 @@ def _clean_json_reply(raw_reply):
 
 
 def _ask_ollama(prompt):
-    """
-    Sends one prompt to your local Ollama server and returns the plain
-    text reply. Same call shape as meal/service.py in NutriGPT -
-    POST to /api/generate with stream: False, read r.json()["response"].
-    """
     payload = {
         "model": OLLAMA_MODEL,
         "prompt": prompt,

@@ -41,9 +41,9 @@ def apply_job(request, job_id):
     if request.method == "POST":
         form = ApplicationForm( request.POST,request.FILES )
         if form.is_valid():
-            application = form.save(commit=False)
-            application.applicant = request.user
-            application.job = job
+            application = form.save(commit=False)#commit=False-->does not save yet.It creates the object in memory only.kina ki applicant ra job field manually set garna baki huncha
+            application.applicant = request.user #The logged-in user becomes the applicant.
+            application.job = job #The selected job is assigned.
             application.save()
             messages.success( request, "Application submitted successfully.")
             return redirect("my-applications" )
