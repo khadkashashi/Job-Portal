@@ -21,7 +21,7 @@ class JobForm(forms.ModelForm):
             "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"})}
 
     def clean(self):
-        cleaned_data = super().clean()
+        cleaned_data = super().clean() #super().clean() le built-in validation pahila run garcha ra validated data cleaned_data ma dincha.
         salary_min = cleaned_data.get("salary_min")
         salary_max = cleaned_data.get("salary_max")
         deadline = cleaned_data.get("deadline")

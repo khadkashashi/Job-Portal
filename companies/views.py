@@ -57,7 +57,7 @@ def company_detail(request, slug):
     return render( request,"companies/company_detail.html",{"company": company})
 
 
-login_required
+@login_required
 def edit_company(request, slug):
     company = get_object_or_404(Company, slug=slug, owner=request.user)
     if request.method == "POST":

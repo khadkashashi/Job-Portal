@@ -21,7 +21,7 @@ def choose_plan(request):
         messages.warning(request, "Please create your company first.")
         return redirect("create-company")
 
-    plans = CompanyPlan.objects.exclude(name="Free")
+    plans = CompanyPlan.objects.exclude(name="Free") #Fetch all plans except the Free plan.
     return render(request, "subscriptions/choose_plan.html", {"plans": plans})
 
 

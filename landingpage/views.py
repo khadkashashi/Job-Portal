@@ -13,8 +13,6 @@ def home(request):
         "total_companies": Company.objects.count(),
     }
     return render(request,"landingpage/home.html", context)
-def about(request):
-    return render(request, "landingpage/about.html")
 
 
 class PublicJobListView(ListView):

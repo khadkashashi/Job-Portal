@@ -51,7 +51,7 @@ def job_list(request):
     keyword = request.GET.get("keyword")
     if keyword:
         jobs = jobs.filter(
-            Q(title__icontains=keyword) |
+            Q(title__icontains=keyword) | #Q objects allow combining multiple conditions using OR (|) or AND (&).
             Q(company__company_name__icontains=keyword) |
             Q(location__icontains=keyword)
         )
@@ -90,10 +90,10 @@ def delete_job(request, pk):
 class PublicJobListView(ListView):
     model = Job
     template_name = "jobs/public_job_list.html"
-    context_object_name = "jobs"
+    context_object_name = "jobs" #template ma data jobs naam bata access garna dincha
     paginate_by = 10
-    def get_queryset(self):
-        queryset = Job.objects.filter(is_active=True, deadline__gte=date.today())       
+    def get_queryset(self): #get_queryset() tells Django-->"Which records should be displayed?"
+        queryset = Job.objects.filter(is_active=True, deadline__gte=date.today())  # gte means--> Greater Than or Equal To
         keyword = self.request.GET.get("keyword")
         location = self.request.GET.get("location")
         employment_type = self.request.GET.get("employment_type")
