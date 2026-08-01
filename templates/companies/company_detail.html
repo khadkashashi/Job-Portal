@@ -45,9 +45,8 @@
 
     {% if company.owner == request.user %}
 
-    <a href="{% url 'edit-company' company.pk %}"
+    <a href="{% url 'edit-company' company.slug %}"
        class="btn btn-primary-custom">
-
         <i class="bi bi-pencil-square"></i> Edit Company
 
     </a>

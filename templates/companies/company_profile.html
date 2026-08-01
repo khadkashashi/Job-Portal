@@ -60,7 +60,7 @@
         <strong>Employees:</strong> {{ company.employee_count }}
     </p>
 
-    <a href="{% url 'edit-company' company.pk %}" class="btn btn-primary-custom">
+    <a href="{% url 'edit-company' company.slug %}" class="btn btn-primary-custom">
         <i class="bi bi-pencil-square"></i> Edit Company
     </a>
 
