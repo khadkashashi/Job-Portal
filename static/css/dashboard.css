@@ -797,3 +797,28 @@ a{
         padding:50px 0;
     }
 }
+.admin-hero{
+    background:linear-gradient(135deg, #1E293B, #475569);
+    border-radius:20px;
+    padding:40px;
+    color:#ffffff;
+    margin-bottom:30px;
+    box-shadow:0 20px 50px rgba(30,41,59,0.25);
+}
+
+.admin-hero h2, .admin-hero p{
+    color:#ffffff;
+}
+
+.chart-box{
+    position:relative;
+    height:260px;
+}
+.admin-hero{
+    padding:28px 32px;
+    margin-bottom:2.5rem;
+}
+.custom-card{
+    padding:24px;
+    border-radius:18px;
+}

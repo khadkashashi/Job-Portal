@@ -4,185 +4,319 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 
 <div class="container py-4">
 
-<section class="recruiter-hero d-flex justify-content-between align-items-center flex-wrap gap-3">
-
-    <div>
+    <!-- Hero -->
+    <section class="admin-hero mb-5">
         <h2 class="fw-bold mb-1">
             <i class="bi bi-shield-lock-fill"></i>
             Platform Overview
         </h2>
-        <p class="mb-0">Admin Dashboard</p>
-    </div>
+        <p class="mb-0">Admin Dashboard &middot; full visibility, real permissions only</p>
+    </section>
 
-</section>
+    <!-- Compact stats -->
+    <div class="custom-card mb-5">
+        <div class="row text-center g-3">
 
-<div class="row g-4 mb-4">
-
-    <div class="col-lg-3 col-md-6">
-        <div class="glass-stat-card">
-            <div class="stat-icon-wrap bg-primary bg-opacity-10">
-                <i class="bi bi-person-fill stat-icon text-primary"></i>
+            <div class="col-6 col-md-2">
+                <i class="bi bi-person-fill text-primary fs-4"></i>
+                <h4 class="fw-bold mb-0 mt-1">{{ total_applicants }}</h4>
+                <p class="text-muted small mb-0">Applicants</p>
             </div>
-            <h2>{{ total_applicants }}</h2>
-            <p>Applicants</p>
+
+            <div class="col-6 col-md-2">
+                <i class="bi bi-person-badge-fill text-info fs-4"></i>
+                <h4 class="fw-bold mb-0 mt-1">{{ total_recruiters }}</h4>
+                <p class="text-muted small mb-0">Recruiters</p>
+            </div>
+
+            <div class="col-6 col-md-2">
+                <i class="bi bi-building text-warning fs-4"></i>
+                <h4 class="fw-bold mb-0 mt-1">{{ total_companies }}</h4>
+                <p class="text-muted small mb-0">Companies</p>
+            </div>
+
+            <div class="col-6 col-md-2">
+                <i class="bi bi-cash-stack text-success fs-4"></i>
+                <h4 class="fw-bold mb-0 mt-1">NPR {{ total_revenue }}</h4>
+                <p class="text-muted small mb-0">Revenue</p>
+            </div>
+
+            <div class="col-6 col-md-2">
+                <i class="bi bi-briefcase-fill text-primary fs-4"></i>
+                <h4 class="fw-bold mb-0 mt-1">{{ total_jobs }}</h4>
+                <p class="text-muted small mb-0">Jobs &middot; {{ active_jobs }} active</p>
+            </div>
+
+            <div class="col-6 col-md-2">
+                <i class="bi bi-people-fill text-info fs-4"></i>
+                <h4 class="fw-bold mb-0 mt-1">{{ total_applications }}</h4>
+                <p class="text-muted small mb-0">Applications</p>
+            </div>
+
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-6">
-        <div class="glass-stat-card">
-            <div class="stat-icon-wrap bg-info bg-opacity-10">
-                <i class="bi bi-person-badge-fill stat-icon text-info"></i>
+    <!-- Charts -->
+    <div class="row g-4 mb-5">
+
+        <div class="col-lg-4">
+            <div class="custom-card">
+                <h6 class="fw-bold mb-3">Applications by Status</h6>
+                <div class="chart-box">
+                    <canvas id="statusChart"></canvas>
+                </div>
             </div>
-            <h2>{{ total_recruiters }}</h2>
-            <p>Recruiters</p>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="custom-card">
+                <h6 class="fw-bold mb-3">Companies by Plan</h6>
+                <div class="chart-box">
+                    <canvas id="planChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="custom-card">
+                <h6 class="fw-bold mb-3">Revenue (Last 6 Months)</h6>
+                <div class="chart-box">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Manage records -->
+    <div class="custom-card mb-5">
+        <h5 class="fw-bold mb-3">
+            <i class="bi bi-tools"></i>
+            Manage Records
+        </h5>
+        <div class="row g-3">
+            <div class="col-md-3 col-6">
+                <a href="/admin/accounts/applicantuser/" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-person-fill"></i> Applicants
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="/admin/accounts/recruiteruser/" class="btn btn-outline-info w-100">
+                    <i class="bi bi-person-badge-fill"></i> Recruiters
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="/admin/companies/company/" class="btn btn-outline-warning w-100">
+                    <i class="bi bi-building"></i> Companies
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <a href="/admin/jobs/job/" class="btn btn-outline-success w-100">
+                    <i class="bi bi-briefcase-fill"></i> Jobs
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="col-lg-3 col-md-6">
-        <div class="glass-stat-card">
-            <div class="stat-icon-wrap bg-warning bg-opacity-10">
-                <i class="bi bi-building stat-icon text-warning"></i>
-            </div>
-            <h2>{{ total_companies }}</h2>
-            <p>Companies</p>
-        </div>
-    </div>
+    <!-- Manage subscriptions - collapsible -->
+    <div class="custom-card mb-">
 
-    <div class="col-lg-3 col-md-6">
-        <div class="glass-stat-card">
-            <div class="stat-icon-wrap bg-success bg-opacity-10">
-                <i class="bi bi-cash-stack stat-icon text-success"></i>
-            </div>
-            <h2>NPR {{ total_revenue }}</h2>
-            <p>Total Revenue</p>
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+    <a class="text-decoration-none flex-grow-1"
+       data-bs-toggle="collapse"
+       href="#subscriptionsCollapse">
+
+        <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-credit-card"></i>
+            Manage Company Subscriptions
+            <i class="bi bi-chevron-down ms-2"></i>
+        </h5>
+
+    </a>
+
+    <div style="max-width:280px; width:100%;">
+        <div class="input-group">
+
+            <span class="input-group-text bg-white">
+                <i class="bi bi-search"></i>
+            </span>
+
+            <input
+                type="text"
+                id="companySearch"
+                class="form-control"
+                placeholder="Search company...">
+
         </div>
     </div>
 
 </div>
 
-<div class="row g-4 mb-4">
+        <div class="collapse mt-3" id="subscriptionsCollapse">
 
-    <div class="col-lg-6">
-        <div class="glass-stat-card">
-            <div class="stat-icon-wrap bg-primary bg-opacity-10">
-                <i class="bi bi-briefcase-fill stat-icon text-primary"></i>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Current Plan</th>
+                            <th>Status</th>
+                            <th>End Date</th>
+                            <th>Renew</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for company in companies %}
+                        <tr>
+                            <td><strong>{{ company.company_name }}</strong></td>
+                            <td>
+                                {% if company.subscription %}
+                                    {{ company.subscription.plan.name }}
+                                {% else %}
+                                    <span class="text-muted">No plan</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if company.subscription.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if company.subscription.end_date %}
+                                    {{ company.subscription.end_date|date:"d M Y" }}
+                                {% elif company.subscription.plan.name == "Lifetime" %}
+                                    Never
+                                {% else %}
+                                    &mdash;
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% for plan in paid_plans %}
+                                    <a href="{% url 'admin-start-payment' company.id plan.id %}"
+                                       class="btn btn-sm btn-outline-primary mb-1">
+                                        {{ plan.name }}
+                                    </a>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted py-4">No companies yet.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <h2>{{ total_jobs }}</h2>
-            <p>Total Jobs ({{ active_jobs }} active)</p>
+
         </div>
+
     </div>
 
-    <div class="col-lg-6">
-        <div class="glass-stat-card">
-            <div class="stat-icon-wrap bg-info bg-opacity-10">
-                <i class="bi bi-people-fill stat-icon text-info"></i>
+    <!-- Recent activity -->
+    <div class="row g-4 mt-2">
+
+        <div class="col-lg-6">
+            <div class="custom-card">
+                <h6 class="fw-bold mb-3"><i class="bi bi-building"></i> Recent Companies</h6>
+                {% for company in recent_companies %}
+                    <p class="mb-2 d-flex justify-content-between">
+                        <span>{{ company.company_name }}</span>
+                        <span class="text-muted small">{{ company.created_at|date:"d M Y" }}</span>
+                    </p>
+                {% empty %}
+                    <p class="text-muted mb-0">No companies yet.</p>
+                {% endfor %}
             </div>
-            <h2>{{ total_applications }}</h2>
-            <p>Total Applications</p>
         </div>
-    </div>
 
-</div>
-<div class="custom-card mt-4">
-
-    <h5 class="mb-3"><i class="bi bi-credit-card"></i> Manage Company Subscriptions</h5>
-
-    <div class="table-responsive">
-
-        <table class="table align-middle">
-
-            <thead>
-                <tr>
-                    <th>Company</th>
-                    <th>Current Plan</th>
-                    <th>Status</th>
-                    <th>End Date</th>
-                    <th>Renew</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-            {% for company in companies %}
-                <tr>
-                    <td><strong>{{ company.company_name }}</strong></td>
-
-                    <td>
-                        {% if company.subscription %}
-                            {{ company.subscription.plan.name }}
-                        {% else %}
-                            <span class="text-muted">No plan</span>
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if company.subscription.is_active %}
-                            <span class="badge bg-success">Active</span>
-                        {% else %}
-                            <span class="badge bg-danger">Inactive</span>
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if company.subscription.end_date %}
-                            {{ company.subscription.end_date|date:"d M Y" }}
-                        {% elif company.subscription.plan.name == "Lifetime" %}
-                            Never
-                        {% else %}
-                            —
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% for plan in paid_plans %}
-                            <a href="{% url 'admin-start-payment' company.id plan.id %}"
-                               class="btn btn-sm btn-outline-primary mb-1">
-                                {{ plan.name }}
-                            </a>
-                        {% endfor %}
-                    </td>
-
-                </tr>
-            {% empty %}
-                <tr><td colspan="5" class="text-center text-muted py-4">No companies yet.</td></tr>
-            {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-<div class="row g-4">
-
-    <div class="col-lg-6">
-        <div class="custom-card">
-            <h5 class="mb-3"><i class="bi bi-building"></i> Recent Companies</h5>
-            {% for company in recent_companies %}
-                <p class="mb-2">{{ company.company_name }} <span class="text-muted small">— {{ company.created_at|date:"d M Y" }}</span></p>
-            {% empty %}
-                <p class="text-muted">No companies yet.</p>
-            {% endfor %}
+        <div class="col-lg-6">
+            <div class="custom-card">
+                <h6 class="fw-bold mb-3"><i class="bi bi-person-lines-fill"></i> Recent Users</h6>
+                {% for u in recent_users %}
+                    <p class="mb-2 d-flex justify-content-between align-items-center">
+                        <span>{{ u.username }}</span>
+                        <span class="badge bg-light text-dark">{{ u.role }}</span>
+                    </p>
+                {% empty %}
+                    <p class="text-muted mb-0">No users yet.</p>
+                {% endfor %}
+            </div>
         </div>
-    </div>
 
-    <div class="col-lg-6">
-        <div class="custom-card">
-            <h5 class="mb-3"><i class="bi bi-person-lines-fill"></i> Recent Users</h5>
-            {% for u in recent_users %}
-                <p class="mb-2">{{ u.username }} <span class="badge bg-light text-dark">{{ u.role }}</span></p>
-            {% empty %}
-                <p class="text-muted">No users yet.</p>
-            {% endfor %}
-        </div>
     </div>
 
 </div>
 
-</div>
+<script>
+new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+        labels: {{ status_labels|safe }},
+        datasets: [{
+            data: {{ status_data|safe }},
+            backgroundColor: ['#F59E0B', '#0EA5E9', '#22C55E', '#4F46E5', '#EF4444']
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
+    }
+});
+
+new Chart(document.getElementById('planChart'), {
+    type: 'bar',
+    data: {
+        labels: {{ plan_labels|safe }},
+        datasets: [{
+            label: 'Companies',
+            data: {{ plan_data|safe }},
+            backgroundColor: '#0D9488',
+            borderRadius: 6
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+});
+
+new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+        labels: {{ revenue_labels|safe }},
+        datasets: [{
+            label: 'Revenue (NPR)',
+            data: {{ revenue_data|safe }},
+            borderColor: '#4F46E5',
+            backgroundColor: 'rgba(79,70,229,0.1)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+    }
+});
+document.getElementById("companySearch").addEventListener("keyup", function () {
+
+    let value = this.value.toLowerCase();
+
+    document.querySelectorAll("#subscriptionsCollapse tbody tr").forEach(function(row){
+
+        let company = row.cells[0].innerText.toLowerCase();
+
+        row.style.display = company.includes(value) ? "" : "none";
+
+    });
+
+});
+</script>
 
 {% endblock %}

@@ -9,10 +9,11 @@ from applications.models import Application, Applicationstatus
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
 from .models import User
-from subscriptions.models import Payment, PaymentStatus,CompanyPlan
-from django.db.models import Sum
-
-
+from subscriptions.models import Payment, PaymentStatus,CompanyPlan, CompanySubscription
+from django.db.models import Sum,Count
+from django.db.models.functions import TruncMonth
+from datetime import date, timedelta
+import json
 
 def register(request):
     if request.method == "POST":
@@ -40,7 +41,7 @@ def login_view(request):
             if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
                 return redirect(next_url)
             if user.is_superuser or user.role == "ADMIN":
-                return redirect("/admin/")
+                return redirect("admin-dashboard")
             elif user.role == "RECRUITER":
                 return redirect("dashboard")
             elif user.role == "APPLICANT":
@@ -122,6 +123,29 @@ def admin_dashboard(request):
     companies = Company.objects.select_related("subscription", "subscription__plan").order_by("company_name")
     paid_plans = CompanyPlan.objects.exclude(name="Free")
 
+    # application status breakdown, for a doughnut chart
+    status_counts = Application.objects.values("status").annotate(count=Count("id"))
+    status_labels = [row["status"] for row in status_counts]
+    status_data = [row["count"] for row in status_counts]
+
+    # subscription plan breakdown, for a bar chart
+    plan_counts = CompanySubscription.objects.values("plan__name").annotate(count=Count("id"))
+    plan_labels = [row["plan__name"] for row in plan_counts]
+    plan_data = [row["count"] for row in plan_counts]
+
+    # revenue trend for the last 6 months, for a line chart
+    six_months_ago = date.today() - timedelta(days=180)
+    monthly_revenue = (
+        Payment.objects.filter(status=PaymentStatus.SUCCESS, created_at__gte=six_months_ago)
+        .annotate(month=TruncMonth("created_at"))
+        .values("month")
+        .annotate(total=Sum("amount"))
+        .order_by("month")
+    )
+    revenue_labels = [row["month"].strftime("%b %Y") for row in monthly_revenue]
+    revenue_data = [row["total"] for row in monthly_revenue]
+
+
     context = {
         "total_applicants": total_applicants,
         "total_recruiters": total_recruiters,
@@ -134,5 +158,11 @@ def admin_dashboard(request):
         "recent_users": recent_users,
         "companies": companies,
         "paid_plans": paid_plans,
+         "status_labels": json.dumps(status_labels),
+        "status_data": json.dumps(status_data),
+        "plan_labels": json.dumps(plan_labels),
+        "plan_data": json.dumps(plan_data),
+        "revenue_labels": json.dumps(revenue_labels),
+        "revenue_data": json.dumps(revenue_data),
     }
     return render(request, "accounts/admin_dashboard.html", context)
