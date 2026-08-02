@@ -7,8 +7,11 @@ from companies.models import Company
 from jobs.models import Job
 from applications.models import Application, Applicationstatus
 from django.utils.http import url_has_allowed_host_and_scheme
-from applications.views import applicant_dashboard
 from django.utils import timezone
+from .models import User
+from subscriptions.models import Payment, PaymentStatus,CompanyPlan
+from django.db.models import Sum
+
 
 
 def register(request):
@@ -102,3 +105,34 @@ def dashboard(request):
         "days_remaining": days_remaining,
     }
     return render(request, "accounts/dashboard.html", context)
+
+def admin_dashboard(request):
+    if not (request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser)):
+        messages.error(request, "You don't have access to the admin dashboard.")
+        return redirect("login")
+    total_applicants = User.objects.filter(role="APPLICANT").count()
+    total_recruiters = User.objects.filter(role="RECRUITER").count()
+    total_companies = Company.objects.count()
+    total_jobs = Job.objects.count()
+    active_jobs = Job.objects.filter(is_active=True).count()
+    total_applications = Application.objects.count()
+    total_revenue = Payment.objects.filter(status=PaymentStatus.SUCCESS).aggregate(total=Sum("amount"))["total"] or 0
+    recent_companies = Company.objects.order_by("-created_at")[:5]
+    recent_users = User.objects.order_by("-created_at")[:5]
+    companies = Company.objects.select_related("subscription", "subscription__plan").order_by("company_name")
+    paid_plans = CompanyPlan.objects.exclude(name="Free")
+
+    context = {
+        "total_applicants": total_applicants,
+        "total_recruiters": total_recruiters,
+        "total_companies": total_companies,
+        "total_jobs": total_jobs,
+        "active_jobs": active_jobs,
+        "total_applications": total_applications,
+        "total_revenue": total_revenue,
+        "recent_companies": recent_companies,
+        "recent_users": recent_users,
+        "companies": companies,
+        "paid_plans": paid_plans,
+    }
+    return render(request, "accounts/admin_dashboard.html", context)
