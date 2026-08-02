@@ -21,16 +21,16 @@ class Company(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
+def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(self.company_name) #Convert the company name into a URL-friendly slug.
+            base_slug = slugify(self.company_name)
             slug = base_slug
             n = 1
-            while Company.objects.filter(slug=slug).exclude(pk=self.pk).exists():  #.exclude(pk=self.pk)-->avoids that problem by ignoring the current object during the duplicate check.
-                slug = f"{base_slug}-{n}" #If the slug already exists,create a new one.
+            while Company.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{n}"
                 n += 1
-            self.slug = slug #Once a unique slug is found,store it in the object.
-        super().save(*args, **kwargs) #Call Django's original save() method.
+            self.slug = slug
+        super().save(*args, **kwargs)
 
-    def __str__(self):
+def __str__(self):
         return self.company_name

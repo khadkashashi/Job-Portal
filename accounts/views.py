@@ -10,6 +10,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from applications.views import applicant_dashboard
 from django.utils import timezone
 
+
 def register(request):
     if request.method == "POST":
         form = UserRegisterForm(request.POST)

@@ -59,16 +59,17 @@ def company_detail(request, slug):
 
 @login_required
 def edit_company(request, slug):
-    company = get_object_or_404(Company, slug=slug, owner=request.user)
+    company = get_object_or_404(Company,slug=slug,owner=request.user)
     if request.method == "POST":
-        form = CompanyForm(request.POST, request.FILES, instance=company)
+        form = CompanyForm(request.POST,request.FILES,instance=company)
         if form.is_valid():
             form.save()
             messages.success(request, "Company updated successfully.")
-            return redirect("company-detail", slug=company.slug)
+            return redirect( "company-detail", slug=company.slug)
+        
     else:
         form = CompanyForm(instance=company)
-    return render(request, "companies/edit_company.html", {"form": form, "company": company})
+    return render(request, "companies/edit_company.html",{"form": form,"company": company  } )
 
 
 def company_list(request):
