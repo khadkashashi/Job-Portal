@@ -29,12 +29,14 @@
             {{ company.city }}, {{ company.country }}
         </p>
 
+       {% if company.slug %}
         <a href="{% url 'company-detail' company.slug %}"
            class="btn btn-primary-custom">
 
             View Details
 
         </a>
+        {% endif %}
 
     </div>
 

@@ -21,9 +21,9 @@ class Company(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(self.company_name)
+            base_slug = slugify(self.company_name) or "company"
             slug = base_slug
             n = 1
             while Company.objects.filter(slug=slug).exclude(pk=self.pk).exists():
@@ -32,5 +32,5 @@ def save(self, *args, **kwargs):
             self.slug = slug
         super().save(*args, **kwargs)
 
-def __str__(self):
+    def __str__(self):
         return self.company_name
