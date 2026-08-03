@@ -67,30 +67,17 @@ Companies
 <ul class="navbar-nav">
 
 {% if request.user.is_authenticated %}
-
 <li class="nav-item">
 
-{% if request.user.role == "RECRUITER" %}
+{% if request.user.is_staff or request.user.is_superuser %}
+<a class="nav-link" href="{% url 'admin-dashboard' %}">Dashboard</a>
 
-<a class="nav-link"
-href="{% url 'dashboard' %}">
-
-Dashboard
-
-</a>
+{% elif request.user.role == "RECRUITER" %}
+<a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
 
 {% elif request.user.role == "APPLICANT" %}
+<a class="nav-link" href="{% url 'applicant-dashboard' %}">Dashboard</a>
 
-<a class="nav-link"
-href="{% url 'applicant-dashboard' %}">
-
-Dashboard
-
-</a>
-
-{% elif request.user.is_superuser or request.user.role == "ADMIN" %}
-
-<a class="nav-link"href="/admin/">Dashboard</a>
 {% endif %}
 </li>
 

@@ -30,6 +30,9 @@ def applicant_dashboard(request):
 
 @login_required
 def apply_job(request, job_id):
+    if request.user.is_staff or request.user.is_superuser:
+        messages.error(request, "Admin accounts cannot apply to jobs.")
+        return redirect("admin-dashboard")
     if request.user.role != "APPLICANT":
         messages.error( request, "Only applicants can apply." )
         return redirect("dashboard")
