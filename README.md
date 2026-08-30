@@ -36,7 +36,7 @@ real payment integration, and automated background tasks.
 - Quick links into Django's built-in admin panel for full record
   management (Applicants, Recruiters, Companies, Jobs)
 - Access gated by Django's real permission system (`is_staff` /
-  `is_superuser`) — never a self-registered role
+  `is_superuser`) - never a self-registered role
 
 ### Platform-wide
 - Custom role-based authentication (Applicant / Recruiter / Admin)
@@ -49,7 +49,7 @@ real payment integration, and automated background tasks.
 
 - **Backend:** Django 6
 - **Database:** SQLite
-- **AI:** Ollama (`gemma2:2b`) — local LLM for interview question
+- **AI:** Ollama (`gemma2:2b`) - local LLM for interview question
   generation and answer scoring
 - **Payments:** Khalti Payment Gateway (sandbox)
 - **Email:** Gmail SMTP
