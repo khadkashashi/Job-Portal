@@ -129,44 +129,10 @@ def application_detail(request, pk):
 
 
 def _generate_questions_in_background(interview_id):
-    """
-    Runs in a separate thread so the browser doesn't have to wait on
-    Ollama (which can take a while on CPU). Fetches its own fresh copy
-    of the interview, since this isn't the same request/response cycle.
-    """
+    interview = AIInterview.objects.get(pk=interview_id)
     try:
-        interview = AIInterview.objects.get(pk=interview_id)
         interview.questions = generate_interview_questions(interview.application.job)
     except Exception:
-        # if Ollama is down/unreachable, fall back to generic questions
-        # instead of leaving is_generating stuck True forever
-        interview.questions = [
-            "Tell us about your relevant experience for this role.",
-            "Why do you want this job?",
-            "Describe a challenging project you have worked on.",
-            "How do you handle tight deadlines?",
-            "What makes you a good fit for this position?",
-        ]
-    finally:
-        interview.is_generating = False
-        interview.save()
-
-
-import threading
-
-
-def _generate_questions_in_background(interview_id):
-    """
-    Runs in a separate thread so the browser doesn't have to wait on
-    Ollama (which can take a while on CPU). Fetches its own fresh copy
-    of the interview, since this isn't the same request/response cycle.
-    """
-    try:
-        interview = AIInterview.objects.get(pk=interview_id)
-        interview.questions = generate_interview_questions(interview.application.job)
-    except Exception:
-        # if Ollama is down/unreachable, fall back to generic questions
-        # instead of leaving is_generating stuck True forever
         interview.questions = [
             "Tell us about your relevant experience for this role.",
             "Why do you want this job?",
@@ -189,18 +155,20 @@ def start_interview(request, application_id):
         return redirect("my-applications")
 
     if interview.questions:
-        return render(request,"applications/interview.html",{"application": application, "interview": interview})
+        return render(request, "applications/interview.html", {"application": application, "interview": interview})
 
     if not interview.is_generating:
         interview.is_generating = True
         interview.save()
-        thread = threading.Thread(target=_generate_questions_in_background, args=(interview.id))
+        thread = threading.Thread(target=_generate_questions_in_background, args=(interview.id,))
         thread.start()
-    return render(request,"applications/interview_loading.html",{"application": application})
+
+    return render(request, "applications/interview_loading.html", {"application": application})
+
 def _evaluate_in_background(interview_id):
     interview = AIInterview.objects.get(pk=interview_id)
     try:
-        score, feedback = evaluate_interview_answers(interview.application.job, interview.questions, interview.answers)
+        score, feedback = evaluate_interview_answers(interview.application.job, interview.questions, interview.answers )
         interview.score = score
         interview.feedback = feedback
     except Exception:
@@ -210,7 +178,6 @@ def _evaluate_in_background(interview_id):
         interview.completed = True
         interview.is_evaluating = False
         interview.save()
-
 
 @login_required
 def submit_interview(request, application_id):
