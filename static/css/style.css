@@ -307,3 +307,25 @@ cursor:pointer;
     font-weight:600;
     color:#4F46E5;
 }
+
+/* fix for buttons with an icon + text stacking/overflowing instead of
+   sitting on one line - icons were inheriting an oversized font-size
+   from elsewhere (e.g. .stat-icon at 45px) with no flex alignment to
+   keep them level with the button text */
+.btn-primary-custom,
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-danger,
+.btn-outline-info,
+.btn-outline-warning{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    white-space:nowrap;
+}
+
+.btn i{
+    font-size:1em;
+    line-height:1;
+}
