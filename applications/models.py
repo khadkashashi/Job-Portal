@@ -30,6 +30,7 @@ class AIInterview(models.Model):
     questions = models.JSONField(default=list, blank=True)
     answers = models.JSONField(default=list, blank=True)
     is_generating = models.BooleanField(default=False)
+    is_evaluating = models.BooleanField(default=False)
     score = models.IntegerField(default=0)
     feedback = models.TextField(blank=True)
     completed = models.BooleanField(default=False)

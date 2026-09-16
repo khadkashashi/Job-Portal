@@ -14,6 +14,20 @@
             <span class="visually-hidden">Loading...</span>
         </div>
 
+               {% if evaluating %}
+
+        <h3 class="fw-bold mb-2">
+            Scoring Your Answers
+        </h3>
+
+        <p class="text-muted mb-3">
+            Our AI is reviewing your answers for
+            <strong>{{ application.job.title }}</strong>. This can take a
+            little while on a local model — thanks for your patience.
+        </p>
+
+        {% else %}
+
         <h3 class="fw-bold mb-2">
             Preparing Your Interview
         </h3>
@@ -24,10 +38,16 @@
             little while on a local model — thanks for your patience.
         </p>
 
+        {% endif %}
+
         <p class="text-muted small mb-0">
             This page will refresh automatically. If nothing happens
-            after a minute, <a href="{% url 'start-interview' application.id %}">click here to check again</a>.
-        </p>
+            after a minute,
+            {% if evaluating %}
+                <a href="{% url 'submit-interview' application.id %}">click here to check again</a>.
+            {% else %}
+                <a href="{% url 'start-interview' application.id %}">click here to check again</a>.
+            {% endif %}        </p>
 
     </div>
 

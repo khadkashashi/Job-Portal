@@ -152,6 +152,33 @@ def _generate_questions_in_background(interview_id):
         interview.save()
 
 
+import threading
+
+
+def _generate_questions_in_background(interview_id):
+    """
+    Runs in a separate thread so the browser doesn't have to wait on
+    Ollama (which can take a while on CPU). Fetches its own fresh copy
+    of the interview, since this isn't the same request/response cycle.
+    """
+    try:
+        interview = AIInterview.objects.get(pk=interview_id)
+        interview.questions = generate_interview_questions(interview.application.job)
+    except Exception:
+        # if Ollama is down/unreachable, fall back to generic questions
+        # instead of leaving is_generating stuck True forever
+        interview.questions = [
+            "Tell us about your relevant experience for this role.",
+            "Why do you want this job?",
+            "Describe a challenging project you have worked on.",
+            "How do you handle tight deadlines?",
+            "What makes you a good fit for this position?",
+        ]
+    finally:
+        interview.is_generating = False
+        interview.save()
+
+
 @login_required
 def start_interview(request, application_id):
     application = get_object_or_404(Application, pk=application_id, applicant=request.user)
@@ -162,36 +189,46 @@ def start_interview(request, application_id):
         return redirect("my-applications")
 
     if interview.questions:
-        # already generated - show the real interview page
-        return render( request, "applications/interview.html", {"application": application, "interview": interview})
+        return render(request,"applications/interview.html",{"application": application, "interview": interview})
+
     if not interview.is_generating:
-        # first visit - kick off generation in the background and mark it started
         interview.is_generating = True
         interview.save()
-        thread = threading.Thread(target=_generate_questions_in_background, args=(interview.id,))
+        thread = threading.Thread(target=_generate_questions_in_background, args=(interview.id))
         thread.start()
+    return render(request,"applications/interview_loading.html",{"application": application})
+def _evaluate_in_background(interview_id):
+    interview = AIInterview.objects.get(pk=interview_id)
+    try:
+        score, feedback = evaluate_interview_answers(interview.application.job, interview.questions, interview.answers)
+        interview.score = score
+        interview.feedback = feedback
+    except Exception:
+        interview.score = 0
+        interview.feedback = "We could not automatically evaluate these answers."
+    finally:
+        interview.completed = True
+        interview.is_evaluating = False
+        interview.save()
 
-    # either just started, or already running from an earlier visit -
-    # show the loading page either way, which auto-refreshes itself
-    return render(request, "applications/interview_loading.html", {"application": application})
 
 @login_required
 def submit_interview(request, application_id):
     application = get_object_or_404(Application, pk=application_id, applicant=request.user)
     interview = get_object_or_404(AIInterview, application=application)
+
+    if interview.completed:
+        messages.success(request, "Interview submitted! The recruiter will see your AI score.")
+        return redirect("my-applications")
+
     if request.method == "POST":
         answers = [
             request.POST.get(f"answer_{i}", "").strip()
             for i in range(len(interview.questions))
         ]
         interview.answers = answers
-        score, feedback = evaluate_interview_answers(application.job, interview.questions, answers)
-        interview.score = score
-        interview.feedback = feedback
-        interview.completed = True
+        interview.is_evaluating = True
         interview.save()
-
-        messages.success(request, "Interview submitted! The recruiter will see your AI score.")
-        return redirect("my-applications")
-
-    return redirect("start-interview", application_id=application.id)
+        thread = threading.Thread( target=_evaluate_in_background, args=(interview.id,))
+        thread.start()   
+    return render(request, "applications/interview_loading.html", {"application": application, "evaluating": True})
