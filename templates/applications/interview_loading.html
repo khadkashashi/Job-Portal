@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Preparing Your Interview{% endblock %}
+
+{% block content %}
+
+<meta http-equiv="refresh" content="4">
+
+<div class="container py-5">
+
+    <div class="col-lg-5 mx-auto custom-card text-center">
+
+        <div class="spinner-border text-primary mb-4" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <h3 class="fw-bold mb-2">
+            Preparing Your Interview
+        </h3>
+
+        <p class="text-muted mb-3">
+            Our AI is generating personalized questions for
+            <strong>{{ application.job.title }}</strong>. This can take a
+            little while on a local model — thanks for your patience.
+        </p>
+
+        <p class="text-muted small mb-0">
+            This page will refresh automatically. If nothing happens
+            after a minute, <a href="{% url 'start-interview' application.id %}">click here to check again</a>.
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

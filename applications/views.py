@@ -6,6 +6,8 @@ from jobs.models import Job
 from .forms import ApplicationForm
 from .models import AIInterview, Application, Applicationstatus
 from .ai import evaluate_interview_answers,generate_interview_questions
+import threading
+
 
 @login_required
 def applicant_dashboard(request):
@@ -125,29 +127,53 @@ def application_detail(request, pk):
 
     return render(request,"applications/detail-application.html",{ "application": application, "interview": interview})
 
+
+def _generate_questions_in_background(interview_id):
+    """
+    Runs in a separate thread so the browser doesn't have to wait on
+    Ollama (which can take a while on CPU). Fetches its own fresh copy
+    of the interview, since this isn't the same request/response cycle.
+    """
+    try:
+        interview = AIInterview.objects.get(pk=interview_id)
+        interview.questions = generate_interview_questions(interview.application.job)
+    except Exception:
+        # if Ollama is down/unreachable, fall back to generic questions
+        # instead of leaving is_generating stuck True forever
+        interview.questions = [
+            "Tell us about your relevant experience for this role.",
+            "Why do you want this job?",
+            "Describe a challenging project you have worked on.",
+            "How do you handle tight deadlines?",
+            "What makes you a good fit for this position?",
+        ]
+    finally:
+        interview.is_generating = False
+        interview.save()
+
+
 @login_required
 def start_interview(request, application_id):
-    # only the applicant who owns this application can take its interview
     application = get_object_or_404(Application, pk=application_id, applicant=request.user)
-
-    # get_or_create so refreshing this page twice doesn't make two interview rows
     interview, _created = AIInterview.objects.get_or_create(application=application)
-
-    # only ask the AI for questions once - reuse them if the applicant reloads the page
-    if not interview.questions:
-        interview.questions = generate_interview_questions(application.job)
-        interview.save()
 
     if interview.completed:
         messages.info(request, "You have already completed this interview.")
         return redirect("my-applications")
 
-    return render(
-        request,
-        "applications/interview.html",
-        {"application": application, "interview": interview},
-    )
+    if interview.questions:
+        # already generated - show the real interview page
+        return render( request, "applications/interview.html", {"application": application, "interview": interview})
+    if not interview.is_generating:
+        # first visit - kick off generation in the background and mark it started
+        interview.is_generating = True
+        interview.save()
+        thread = threading.Thread(target=_generate_questions_in_background, args=(interview.id,))
+        thread.start()
 
+    # either just started, or already running from an earlier visit -
+    # show the loading page either way, which auto-refreshes itself
+    return render(request, "applications/interview_loading.html", {"application": application})
 
 @login_required
 def submit_interview(request, application_id):
